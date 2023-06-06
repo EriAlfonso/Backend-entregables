@@ -1,7 +1,10 @@
+const fs = require('fs')
+
 // creamos la clase ProductManager
 class productManager{
-    constructor(){
-        this.products = []
+    constructor(filename){
+        this.filename = filename
+        this.format = 'utf-8'
     }
     // funcion para crear el id o code
     getNewId = () => {
@@ -20,6 +23,7 @@ class productManager{
             return console.log("Error:Missing Fields"); 
         }
         const product = {
+            id:this.getNewId(),
             title, 
             description,
             price:`\$${price}`,
@@ -33,13 +37,18 @@ class productManager{
     }
     
     // muestra todos los productos en el array
-    getProducts =()=>{
-        return this.products 
+    getProducts = async () => {
+        return fs.promises.readFile(this.filename, this.format)
+            .then(content => JSON.parse(content))
+            .catch(e => {
+                console.log('ERROR', e);
+                return []
+            })
     }
     
     // buscador de producto por id
     getProductById =(IdCode)=>{
-        let product = this.products.find(product => product.code === IdCode)
+        let product = this.products.find(product => product.id === IdCode)
         if(product) {
             // uso de stringify para imprimir las variables del objeto
             return `Code: ${IdCode} Found` + JSON.stringify(product) ;
@@ -50,16 +59,20 @@ class productManager{
             return `Code: ${IdCode} Not Found`;
         }
     }
+    // actualiza el producto usando su id para buscarlo
+    updateProduct=()=>{
+
+    }
+    // recibe un id y elimina ese producto
+    deleteProduct=()=>{
+
+    }
 }
 
-// test de funciones
 const test = new productManager()
 test.addProduct("juego de mesa","un juego de mesa infantil",2300,"...",24)
 test.addProduct("pelota","pelota de futbol",1000,"...",10)
 let search1=test.getProductById(1)
 let search2=test.getProductById(5)
 test.addProduct("pelota")
-// test log
 console.log(test.getProducts())
-console.log(search1)
-console.log(search2)
