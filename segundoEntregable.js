@@ -2,8 +2,8 @@ const fs = require('fs')
 
 // creamos la clase ProductManager
 class productManager {
-    constructor(filename) {
-        this.filename = filename
+    constructor(path) {
+        this.path = path
         this.format = 'utf-8'
     }
 
@@ -11,7 +11,7 @@ class productManager {
     // muestra todos los productos en el array
     getProducts = async () => {
         try {
-            const content = await fs.promises.readFile(this.filename, this.format);
+            const content = await fs.promises.readFile(this.path, this.format);
             return JSON.parse(content.toString());
         } catch (error) {
             console.log('Error: Product List Empty:', error);
@@ -22,13 +22,15 @@ class productManager {
     // funcion para crear el id o code
     getNewId = async () => {
         const productList = await this.getProducts();
-        let count = productList.length;
-        if (count > 0) {
-            return ++count
-        } else {
-            return 1;
-        }
-    };
+        let count = 0;
+  productList.forEach(product => {
+    if (product.id > count) {
+      count = product.id;
+    }
+  });
+  const newCount = ++count;
+return newCount;
+};
 
     // funcion para agregar producto
     addProduct = async (title, description, price, thumbnail, stock, code) => {
@@ -54,7 +56,7 @@ class productManager {
             stock,
         };
         productList.push(product);
-        await fs.promises.writeFile(this.filename, JSON.stringify(productList));
+        await fs.promises.writeFile(this.path, JSON.stringify(productList));
     };
 
     // buscador de producto por id
@@ -98,7 +100,7 @@ class productManager {
         const updatedProduct = { ...productList[findID], ...update };
         productList[findID] = updatedProduct;
         // lo implementamos al archivo
-        await fs.promises.writeFile(this.filename, JSON.stringify(productList));
+        await fs.promises.writeFile(this.path, JSON.stringify(productList));
         // mensaje de exito
         console.log(`Product with Id: ${id} has been updated.`);
     }
@@ -118,7 +120,7 @@ class productManager {
         // si existe borramos ese id
         productList.splice(findID, 1);
         // sobreescribimos el archivo
-        await fs.promises.writeFile(this.filename, JSON.stringify(productList));
+        await fs.promises.writeFile(this.path, JSON.stringify(productList));
         console.log(`Product with Id: ${id} has been deleted.`);
     };
 }
@@ -132,7 +134,7 @@ async function run() {
     await test.updateProduct(1, "juego de mesa nuevo", "un juego de mesa infantil nuevo", 1200, "...", 33, "aai")
     let search1 = await test.getProductById(55)
     let search2 = await test.getProductById(1)
-    let delete1 = await test.deleteProduct(2)
+    let delete1 = await test.deleteProduct(3)
     console.log(await test.getProducts())
     console.log(search1)
     console.log(search2)
