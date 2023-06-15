@@ -1,7 +1,7 @@
-const fs = require('fs')
+import fs from "fs"
 
-// creamos la clase ProductManager
-class productManager {
+// creamos la clase ProductManager y la exportamos
+export default class productManager {
     constructor(path) {
         this.path = path
         this.format = 'utf-8'
@@ -64,7 +64,8 @@ return newCount;
         const productList = await this.getProducts();
         let product = productList.find(product => product.id === id)
         if (product) {
-            return `Code: ${id} Found` + JSON.stringify(product);
+            // modificamos esto para que devuelva un objeto y no un string como antes
+            return product;
         }
 
         else {
@@ -76,7 +77,6 @@ return newCount;
 
     // actualiza el producto usando su id para buscarlo
     updateProduct = async (id, title, description, price, thumbnail, stock, code) => {
-        // creamos un objeto con las variables nuevas
         const update = {
             id,
             title,
@@ -86,12 +86,8 @@ return newCount;
             code,
             stock,
         };
-        // obtenemos la informacion
         const productList = await this.getProducts();
-        // buscamos el id
-        const findID = productList.findIndex(product => product.id === id);
-
-        // si no existe
+        const findID = await this.getProductById();
         if (findID === -1) {
             return console.log(`Error: Product with Id : ${id} not found.`);
         }
@@ -99,45 +95,38 @@ return newCount;
         // si existe sobreescribimos el producto usando el objeto nuevo
         const updatedProduct = { ...productList[findID], ...update };
         productList[findID] = updatedProduct;
-        // lo implementamos al archivo
         await fs.promises.writeFile(this.path, JSON.stringify(productList));
-        // mensaje de exito
         console.log(`Product with Id: ${id} has been updated.`);
     }
 
     // funcion para borra producto por id
     deleteProduct = async (id) => {
-        // obtenemos la informacion
         const productList = await this.getProducts();
-        // buscamos el id
-        const findID = productList.findIndex(product => product.id === id);
-
-        // si no existe
+        const findID = await this.getProductById();
         if (findID === -1) {
             return console.log(`Error: Product with Id : ${id} not found.`);
         }
-        
-        // si existe borramos ese id
         productList.splice(findID, 1);
-        // sobreescribimos el archivo
         await fs.promises.writeFile(this.path, JSON.stringify(productList));
         console.log(`Product with Id: ${id} has been deleted.`);
     };
 }
 
+
 // test
 async function run() {
-    const test = new productManager('product.json')
-    await test.addProduct("juego de mesa1", "un juego de mesa infantil1", 2300, "...", 24, "i")
-    await test.addProduct("juego de mesa2", "un juego de mesa infantil2", 2300, "...", 24, "ii")
-    await test.addProduct("juego de mesa3", "un juego de mesa infantil3", 2300, "...", 24, "iii")
-    await test.updateProduct(1, "juego de mesa nuevo", "un juego de mesa infantil nuevo", 1200, "...", 33, "aai")
-    let search1 = await test.getProductById(55)
-    let search2 = await test.getProductById(1)
-    let delete1 = await test.deleteProduct(3)
-    console.log(await test.getProducts())
-    console.log(search1)
-    console.log(search2)
+    const test = new productManager('./product.json')
+    // await test.addProduct("juego 1", "un juego de mesa infantil", 2300, "...", 24, "I")
+    // await test.addProduct("juego 2", "un juego de mesa infantil", 2400, "...", 24, "II")
+    // await test.addProduct("juego 3", "un juego de mesa infantil", 2250, "...", 24, "III")
+    // await test.addProduct("juego 4", "un juego de mesa infantil", 2100, "...", 24, "IV")
+    // await test.addProduct("juego 5", "un juego de mesa infantil", 2000, "...", 24, "V")
+    // await test.addProduct("juego 6", "un juego de mesa infantil", 2150, "...", 24, "VI")
+    // await test.addProduct("juego 7", "un juego de mesa infantil", 2410, "...", 24, "VII")
+    // await test.addProduct("juego 8", "un juego de mesa infantil", 2320, "...", 24, "VIII")
+    // await test.addProduct("juego 9", "un juego de mesa infantil", 2300, "...", 24, "IX")
+    // await test.addProduct("juego 10", "un juego de mesa infantil", 2300, "...", 24, "X")
+    // console.log(await test.getProducts())
 }
 
 run()
