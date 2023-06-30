@@ -6,7 +6,7 @@ export default class cartManager {
         this.path = path;
         this.format = "utf-8";
     }
-
+// obtenemos los carts del json
     getCarts = async () => {
       try {
         const content = await fs.promises.readFile(this.path, this.format);
@@ -16,7 +16,7 @@ export default class cartManager {
         return [];
       }
     };
-
+// funcion para crear id automaticamente 
     getNewId = async () => {
         const cartslist = await this.getCarts();
         let count = 0;
@@ -28,7 +28,7 @@ export default class cartManager {
         const newCount = ++count;
         return newCount;
       };
-    
+    // crea un cart 
       createCart = async () => {
         try {
           const newId = await this.getNewId();
@@ -41,7 +41,7 @@ export default class cartManager {
           console.error("Error creating cart:", error);
         }
       };
-
+      // funcion para modificar un cart
       updateCart = async (cartId, updatedCarts) => {
         try {
           await fs.promises.writeFile(this.path, JSON.stringify(updatedCarts), this.format);

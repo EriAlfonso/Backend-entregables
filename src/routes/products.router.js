@@ -14,8 +14,8 @@ router.get('/', async (req, res) => {
     const products = await productManagerImport.getProducts();
     const limit = parseInt(req.query.limit);
     if (limit > 0) {
-      const limitedProducts = products.slice(0, limit);
-      res.json(limitedProducts);
+      const limitProduct = products.slice(0, limit);
+      res.json(limitProduct);
     } else {
       res.json(products);
     }
@@ -44,7 +44,7 @@ router.post('/', async (req, res) => {
   const { title, description, price,  thumbnail, category, stock, code } = req.body;
   try {
     await productManagerImport.addProduct(title, description, price, thumbnail,category, stock, code);
-    res.status(201).json({ message: 'Product added successfully' });
+    return console.log('Product added successfully')
   } catch (error) {
     res.status(500).json({ error: 'Internal Server Error' });
   }
@@ -56,10 +56,14 @@ router.put('/:pid', async (req, res) => {
   const { title, description, price, thumbnail, category, stock, code } = req.body;
 
   try {
-    await productManagerImport.updateProduct(id, title, description, price, thumbnail,category, stock, code);
-    res.json({ message: `Product with Id: ${id} has been updated` });
+    const updatedProduct = await productManagerImport.updateProduct(id, title, description, price, thumbnail, category, stock, code);
+    
+    if (updatedProduct) {
+      return console.log(`Product with ID: ${id} has been updated successfully`)
+    } else {
+      res.status(404).json({ error: `Product with ID: ${id} not found` });
+    }
   } catch (error) {
-    console.error('Error updating product:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
@@ -70,9 +74,8 @@ router.delete('/:pid', async (req, res) => {
 
   try {
     await productManagerImport.deleteProduct(id);
-    res.json({ message: `Product with Id: ${id} has been deleted` });
+    return console.log(`Product with Id: ${id} has been deleted`)
   } catch (error) {
-    console.error('Error deleting product:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });

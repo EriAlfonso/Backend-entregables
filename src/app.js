@@ -9,7 +9,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 
 
-
+// import de routers
 app.use('/api/carts',cartRouter)
 app.use('/api/products', productRouter)
 
