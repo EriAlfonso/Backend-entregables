@@ -41,5 +41,14 @@ export default class cartManager {
           console.error("Error creating cart:", error);
         }
       };
+
+      updateCart = async (cartId, updatedCarts) => {
+        try {
+          await fs.promises.writeFile(this.path, JSON.stringify(updatedCarts), this.format);
+          console.log(`Cart with ID: ${cartId} has been updated.`);
+        } catch (error) {
+          console.error('Error updating cart:', error);
+        }
+      };
     
     }

@@ -41,9 +41,9 @@ router.get('/:pid', async (req, res) => {
 
 // Post para agregar un producto
 router.post('/', async (req, res) => {
-  const { title, description, price, thumbnail, stock, code } = req.body;
+  const { title, description, price,  thumbnail, category, stock, code } = req.body;
   try {
-    await productManagerImport.addProduct(title, description, price, thumbnail, stock, code);
+    await productManagerImport.addProduct(title, description, price, thumbnail,category, stock, code);
     res.status(201).json({ message: 'Product added successfully' });
   } catch (error) {
     res.status(500).json({ error: 'Internal Server Error' });
@@ -52,12 +52,12 @@ router.post('/', async (req, res) => {
 
 // Put para modificar un producto usando id
 router.put('/:pid', async (req, res) => {
-  const { pid } = req.params;
-  const { title, description, price, thumbnail, stock, code } = req.body;
+  const id = parseInt(req.params.pid);
+  const { title, description, price, thumbnail, category, stock, code } = req.body;
 
   try {
-    await productManagerImport.updateProduct(pid, title, description, price, thumbnail, stock, code);
-    res.json({ message: `Product with Id: ${pid} has been updated` });
+    await productManagerImport.updateProduct(id, title, description, price, thumbnail,category, stock, code);
+    res.json({ message: `Product with Id: ${id} has been updated` });
   } catch (error) {
     console.error('Error updating product:', error);
     res.status(500).json({ error: 'Internal Server Error' });
@@ -66,11 +66,11 @@ router.put('/:pid', async (req, res) => {
 
 // Delete para borrar un producto usando id
 router.delete('/:pid', async (req, res) => {
-  const { pid } = req.params;
+  const id = parseInt(req.params.pid);
 
   try {
-    await productManagerImport.deleteProduct(pid);
-    res.json({ message: `Product with Id: ${pid} has been deleted` });
+    await productManagerImport.deleteProduct(id);
+    res.json({ message: `Product with Id: ${id} has been deleted` });
   } catch (error) {
     console.error('Error deleting product:', error);
     res.status(500).json({ error: 'Internal Server Error' });

@@ -32,8 +32,8 @@ export default class productManager {
     };
 
     // funcion para agregar producto
-    addProduct = async (title, description, price, thumbnail, stock, code) => {
-        if (!title || !description || !price || !thumbnail || !stock || !code) {
+    addProduct = async (title, description, price, thumbnail,category, stock, code) => {
+        if (!title || !description || !price || !thumbnail || !stock || !code || !category) {
             return console.log("Error: Missing Variables");
         }
         const productList = await this.getProducts();
@@ -50,7 +50,9 @@ export default class productManager {
             title,
             description,
             price: `$${price}`,
+            status:true,
             thumbnail,
+            category,
             code,
             stock,
         };
@@ -61,34 +63,21 @@ export default class productManager {
     // buscador de producto por id
     getProductById = async (id) => {
         const productList = await this.getProducts();
-        let product = productList.find((product) => product.id === id);
-        if (product) {
-            // modificamos esto para que devuelva un objeto y no un string como antes
-            return product;
-        } else {
-            // en caso de no encontrar el codigo
-            return `Id: ${id} Not Found`;
-        }
-    };
+        const product = productList.find((product) => product.id === id);
+        return product;
+      };
 
     // actualiza el producto usando su id para buscarlo
-    updateProduct = async (
-        id,
-        title,
-        description,
-        price,
-        thumbnail,
-        stock,
-        code
-    ) => {
+    updateProduct = async (id,title, description, price, thumbnail,category, stock, code) => {
         const update = {
             id,
             title,
             description,
             price: `$${price}`,
             thumbnail,
-            code,
+            category,
             stock,
+            code,
         };
         const productList = await this.getProducts();
         const findID = await this.getProductById();
@@ -100,25 +89,24 @@ export default class productManager {
         const updatedProduct = { ...productList[findID], ...update };
         productList[findID] = updatedProduct;
         await fs.promises.writeFile(this.path, JSON.stringify(productList));
-        console.log(`Product with Id: ${id} has been updated.`);
     };
 
     // funcion para borra producto por id
     deleteProduct = async (id) => {
-        const productList = await this.getProducts();
-        const findID = await this.getProductById();
-        if (findID === -1) {
-            return console.log(`Error: Product with Id : ${id} not found.`);
+        let productlist = await this.getProducts();
+        try {
+          const product = Object.values(productlist).find((product) => product.id === id);
+      
+          if (product) {
+            productlist = productlist.filter((item) => item.id !== id);
+            await fs.promises.writeFile(this.path, JSON.stringify(productlist));
+      
+            return console.log("Product removed");
+          } else {
+            return console.error("Product does not exist");
+          }
+        } catch (err) {
+          return console.error(err);
         }
-        productList.splice(findID, 1);
-        await fs.promises.writeFile(this.path, JSON.stringify(productList));
-        console.log(`Product with Id: ${id} has been deleted.`);
-    };
+      };
 }
-
-// test
-// async function run() {
-//     const test = new productManager("./product.json");
-// }
-
-// run();
