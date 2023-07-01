@@ -44,7 +44,7 @@ router.post('/', async (req, res) => {
   const { title, description, price,  thumbnail, category, stock, code } = req.body;
   try {
     await productManagerImport.addProduct(title, description, price, thumbnail,category, stock, code);
-    return console.log('Product added successfully')
+    res.status(201).json({ message: 'Product added successfully' });
   } catch (error) {
     res.status(500).json({ error: 'Internal Server Error' });
   }
@@ -59,7 +59,7 @@ router.put('/:pid', async (req, res) => {
     const updatedProduct = await productManagerImport.updateProduct(id, title, description, price, thumbnail, category, stock, code);
     
     if (updatedProduct) {
-      return console.log(`Product with ID: ${id} has been updated successfully`)
+      res.json({ message: `Product with Id: ${id} has been updated` });
     } else {
       res.status(404).json({ error: `Product with ID: ${id} not found` });
     }
@@ -74,7 +74,7 @@ router.delete('/:pid', async (req, res) => {
 
   try {
     await productManagerImport.deleteProduct(id);
-    return console.log(`Product with Id: ${id} has been deleted`)
+    res.json({ message: `Product with Id: ${id} has been deleted` });
   } catch (error) {
     res.status(500).json({ error: 'Internal Server Error' });
   }
