@@ -18,7 +18,7 @@ export default class productManager {
         }
     };
 
-    // funcion para crear el id o code
+    // funcion para crear el id 
     getNewId = async () => {
         const productList = await this.getProducts();
         let count = 0;

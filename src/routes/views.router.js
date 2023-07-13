@@ -15,17 +15,28 @@ router.get ('/home', async (req,res)=>{
     const products = await productManagerImport.getProducts();
     res.render('home', {products})
 })
+router.get ('/realTimeProducts', async (req,res)=>{
+    const products = await productManagerImport.getProducts();
+    res.render('realTimeProducts', {products})
+})
 
 router.get ('/add-products', async (req,res)=>{
     res.render('form', {})
 })
 
-router.post ('/add-products', async (req,res)=>{
-    const data = req.body
-    const result = await productManagerImport.addProduct(data)
-// 0.30
-    console.log(result)
-    res.redirect('/home')
+router.post ("/add-products", async (req,res)=>{
+    const { title, description, price, thumbnail, category, stock, code } = req.body;
+  const result = await productManagerImport.addProduct(
+    title,
+    description,
+    price,
+    thumbnail,
+    category,
+    stock,
+    code
+  );
+  console.log(req.body);
+  res.redirect("/home");
 })
 
 export default router

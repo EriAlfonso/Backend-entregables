@@ -1,13 +1,29 @@
-<table id="RealTimeProductsTable">
+<h2>Products Updated in Realtime</h2>
+
+
+<form id="realTimeForm" >
+    Title:<input type="text" name="title">
+    Description:<input type="text" name="description">
+    Price:<input type="number" name="price">
+    Thumbnail:<input type="text" name="thumbnail">
+    Category:<input type="text" name="category">
+    Stock:<input type="number" name="stock">
+    Code:<input type="text" name="code">
+
+
+<button type="submit">Send</button>
+</form>
+
+<table id="realTimeProductsTable">
     <tr>
-        <td><strong>Producto</strong></td>
-        <td><strong>Descripción</strong></td>
-        <td><strong>Precio</strong></td>
-        <td><strong>Código</strong></td>
+        <td><strong>Product</strong></td>
+        <td><strong>Description</strong></td>
+        <td><strong>Price</strong></td>
+        <td><strong>Code</strong></td>
         <td><strong>Stock</strong></td>
-        <td><strong>Categoría</strong></td>
+        <td><strong>Category</strong></td>
     </tr>
-    {{#each data}}
+    {{#each products}}
     <tr>
     <td>{{this.title}}</td>
     <td>{{this.description}}</td>
@@ -18,3 +34,9 @@
     </tr>
     {{/each}}  
 </table>
+
+<script>
+    document.getElementById('realTimeForm').onsubmit = e =>{
+        e.preventDefault()
+        }
+</script>
