@@ -33,32 +33,32 @@ export default class productManager {
 
     // funcion para agregar producto
     addProduct = async (title, description, price, thumbnail,category, stock, code) => {
-        // verificamos que esten todos los keys presente.
-        if (!title || !description || !price || !thumbnail || !stock || !code || !category) {
-            return console.log("Error: Missing Variables");
-        }
-        const productList = await this.getProducts();
-        // codigo para impedir la repeticion de la variable "code"
-        const codeExists = productList.find((product) => product.code === code);
-        if (codeExists) {
-            return console.log(`Error: Product with code ${code} already exists.`);
-        }
-        // id creado automaticamente
-        const id = await this.getNewId();
-        const product = {
-            id: parseInt(id),
-            title,
-            description,
-            price: `$${price}`,
-            status:true,
-            thumbnail,
-            category,
-            code,
-            stock,
-        };
-        productList.push(product);
-        await fs.promises.writeFile(this.path, JSON.stringify(productList),this.format);
-    };
+      // verificamos que esten todos los keys presente.
+      if (!title || !description || !price || !thumbnail || !stock || !code || !category) {
+          return console.log("Error: Missing Variables");
+      }
+      const productList = await this.getProducts();
+      // codigo para impedir la repeticion de la variable "code"
+      const codeExists = productList.find((product) => product.code === code);
+      if (codeExists) {
+          return console.log(`Error: Product with code ${code} already exists.`);
+      }
+      // id creado automaticamente
+      const id = await this.getNewId();
+      const product = {
+          id: parseInt(id),
+          title,
+          description,
+          price: `$${price}`,
+          status:true,
+          thumbnail,
+          category,
+          code,
+          stock,
+      };
+      productList.push(product);
+      await fs.promises.writeFile(this.path, JSON.stringify(productList),this.format);
+  };
 
     // buscador de producto por id
     getProductById = async (id) => {

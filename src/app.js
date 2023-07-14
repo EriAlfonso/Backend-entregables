@@ -24,4 +24,14 @@ app.use('/api/carts',cartRouter)
 app.use('/api/products', productRouter)
 
 // port con mensaje para validar que funcione
-app.listen(8080, () => console.log("Server is Running.."));
+const httpServer= app.listen(8080, () => console.log("Server is Running.."));
+
+// server con io
+const io = new Server(httpServer)
+
+io.on('connection', socket=>{
+    socket.on('newProduct', data =>{
+        console.log(data)
+    })
+} )
+
