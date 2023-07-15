@@ -1,8 +1,10 @@
 <h3>Product list</h3>
-<a href="/add-products">Add New Product</a>
-<table id="productsContentTable" border="1">
+<a class="btn btn-outline-success" href="/add-products" role="button">Add New Product</a>
+
+<table id="productsContentTable" class="table">
     <thead>
     <tr>
+        <td></td>
         <td><strong>Product</strong></td>
         <td><strong>Description</strong></td>
         <td><strong>Price</strong></td>
@@ -14,6 +16,7 @@
     <tbody>
     {{#each products}}
     <tr>
+            <td><img src="{{this.thumbnail}}" style="width: 5rem;" alt="no image"></td>
     <td>{{this.title}}</td>
     <td>{{this.description}}</td>
     <td>{{this.price}}</td>
