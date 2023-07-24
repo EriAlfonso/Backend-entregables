@@ -51,13 +51,13 @@ export default class productManager {
       !code ||
       !category
     ) {
-      return console.log("Error: Missing Variables");
+      return { success: false, message: "Error: Missing Variables" };
     }
     const productList = await this.getProducts();
     // codigo para impedir la repeticion de la variable "code"
     const codeExists = productList.find((product) => product.code === code);
     if (codeExists) {
-      return console.log(`Error: Product with code ${code} already exists.`);
+      return { success: false, message: "roduct with code ${code} already exists." };
     }
     // id creado automaticamente
     const id = await this.getNewId();
@@ -78,6 +78,7 @@ export default class productManager {
       JSON.stringify(productList),
       this.format
     );
+    return { success: true, message: "Product added successfully" }
   };
 
   // buscador de producto por id
@@ -123,9 +124,9 @@ export default class productManager {
         JSON.stringify(updatedProductList),
         this.format
       );
-      return updatedProduct;
+      return { success: true, message: "Product updated successfully" };
     } else {
-      return null;
+      return { success: false, message: "Product not Found" };
     }
   };
 
@@ -141,12 +142,13 @@ export default class productManager {
           JSON.stringify(productlist),
           this.format
         );
-        return true;
+        return { success: true, message: "Product deleted successfully" };
       } else {
-        return false;
+        return { success: false, message: "Product Not Found" };
       }
-    } catch (err) {
-      return console.error(err);
+    } catch (error) {
+      console.error(error);
+      return { success: false, message: "Internal Server Error" };
     }
   };
 }

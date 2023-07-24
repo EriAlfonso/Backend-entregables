@@ -43,9 +43,10 @@ export default class cartManager {
         JSON.stringify(carts),
         this.format
       );
-      console.log(`Cart with ID: ${newId} has been created.`);
+      return { success: true, message: `Cart with ID: ${newId} has been created.` };
     } catch (error) {
-      console.error("Error creating cart:", error);
+      console.error(error);
+      return { success: false, message: "Error creating cart" };
     }
   };
   // funcion para modificar un cart
@@ -56,9 +57,10 @@ export default class cartManager {
         JSON.stringify(updatedCarts),
         this.format
       );
-      console.log(`Cart with ID: ${cartId} has been updated.`);
+      return { success: true, message: `Cart with ID: ${cartId} has been updated.` };
     } catch (error) {
-      console.error("Error updating cart:", error);
+      console.error(error);
+      return { success: false, message: "Error updating cart" };
     }
   };
 // funcion para agregar items al carrito
