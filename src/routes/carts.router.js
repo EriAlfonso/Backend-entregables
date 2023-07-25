@@ -3,7 +3,7 @@ import cartManager from "../manager/cartManager.js";
 
 const router = Router();
 
-const cartManagerImport = new cartManager("../cart.json");
+const cartManagerImport = new cartManager("./cart.json");
 // CART
 
 // Post para crear un nuevo carrito
@@ -24,14 +24,13 @@ router.get("/:cid", async (req, res) => {
 
   try {
     // usamos el get carts para traer el json con los carts
-    const carts = await cartManagerImport.getCarts();
-    // buscamos el cart con el id
-    const cart = carts.find((cart) => cart.id === cartId);
+    const results = await cartManagerImport.getCarts(cartId);
     // mostramos el cart
-    if (cart) {
-      res.json(cart);
+    if (results.success) {
+      res.json(results.cart);
+    }
       // un notfound por si no existe
-    } else {
+    else {
       res.status(404).send("Cart Not Found");
     }
   } catch (error) {
@@ -48,7 +47,7 @@ router.post("/:cid/product/:pid", async (req, res) => {
   try {
     const result = await cartManagerImport.addProductCart(cartId, productId, quantity);
 
-    if (result) {
+    if (result.success) {
       res.json({ message: "Product added successfully " });
     } else {
       res.status(404).send({ message: "Product not found" });

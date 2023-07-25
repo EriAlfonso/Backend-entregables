@@ -11,13 +11,12 @@ const productManagerImport = new productManager("./product.json");
 // get con soporte para ?limit=
 router.get("/", async (req, res) => {
   try {
-    const products = await productManagerImport.getProducts();
+    const productresult = await productManagerImport.getProducts();
     const limit = parseInt(req.query.limit);
-    if (limit > 0) {
-      const limitProduct = products.slice(0, limit);
-      res.json(limitProduct);
+    if (productresult.success) {
+      res.json(productresult.products);
     } else {
-      res.json(products);
+      res.status(404).send("Product List Not Found")
     }
   } catch (error) {
     res.json("Error Receiving Data");
@@ -29,7 +28,7 @@ router.get("/:pid", async (req, res) => {
   const productId = parseInt(req.params.pid);
   try {
     const product = await productManagerImport.getProductById(productId);
-    if (product) {
+    if (product.success) {
       res.json(product);
     } else {
       res.status(404).send("Product Not Found");
@@ -77,7 +76,7 @@ router.put("/:pid", async (req, res) => {
       code
     );
 
-    if (updatedProduct) {
+    if (updatedProduct.success) {
       res.json({ message: `Product with Id: ${id} has been updated` });
     } else {
       res.status(404).json({ error: `Product with ID: ${id} not found` });
@@ -94,7 +93,7 @@ router.delete("/:pid", async (req, res) => {
   try {
     const productDelete = await productManagerImport.deleteProduct(id);
 
-    if (productDelete) {
+    if (productDelete.success) {
       return res.json({ message: `Product with Id: ${id} has been deleted` });
     } else {
       return res.status(404).json({ message: "Product not found" });
