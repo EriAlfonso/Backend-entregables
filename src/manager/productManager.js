@@ -13,8 +13,8 @@ export default class productManager {
       const content = await fs.promises.readFile(this.path, this.format);
       const products=JSON.parse(content.toString());
       if (limit && limit > 0) {
-        productLimit= products.slice(0, limit);
-        return { success: true, productLimit }
+        const productLimit= products.slice(0, limit);
+        return { success: true, products:productLimit }
       }
       return { success: true, products };
     } catch (error) {

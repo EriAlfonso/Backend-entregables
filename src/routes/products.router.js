@@ -11,17 +11,19 @@ const productManagerImport = new productManager("./product.json");
 // get con soporte para ?limit=
 router.get("/", async (req, res) => {
   try {
-    const productresult = await productManagerImport.getProducts();
     const limit = parseInt(req.query.limit);
+    const productresult = await productManagerImport.getProducts(limit);
     if (productresult.success) {
       res.json(productresult.products);
     } else {
       res.status(404).send("Product List Not Found")
     }
   } catch (error) {
-    res.json("Error Receiving Data");
+  console.error("Error:", error);
+  res.status(500).json({ error: "Error Receiving Data" });
   }
 });
+
 
 // get con product id devuelve producto especifico
 router.get("/:pid", async (req, res) => {
