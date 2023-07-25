@@ -9,18 +9,19 @@ export default class productManager {
 
   // muestra todos los productos en el array
   getProducts = async (limit) => {
-    try {
       const content = await fs.promises.readFile(this.path, this.format);
       const products=JSON.parse(content.toString());
+      if (products.length === 0) {
+        return { success: false, message: "No products found" };
+      }
+      if (limit !== undefined && limit <= 0) {
+        return { success: false, message: "Invalid number" };
+      }
       if (limit && limit > 0) {
         const productLimit= products.slice(0, limit);
         return { success: true, products:productLimit }
       }
       return { success: true, products };
-    } catch (error) {
-      console.error(error);
-      return { success: false, message: "Internal Server Error" };
-    }
   };
 
   // funcion para crear el id o code
