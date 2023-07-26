@@ -7,10 +7,20 @@ export default class productManager {
     this.format = "utf-8";
   }
 
+
+  productsFile = async (filePath, format) => {
+    try {
+      const content = await fs.promises.readFile(filePath, format);
+      return JSON.parse(content.toString());
+    } catch (error) {
+      console.error("Error reading products file:", error);
+      return [];
+    }
+  };
+
   // muestra todos los productos en el array
   getProducts = async (limit) => {
-      const content = await fs.promises.readFile(this.path, this.format);
-      const products=JSON.parse(content.toString());
+    const products = await this.productsFile(this.path, this.format)
       if (products.length === 0) {
         return { success: false, message: "No products found" };
       }
@@ -26,7 +36,7 @@ export default class productManager {
 
   // funcion para crear el id o code
   getNewId = async () => {
-    const productList = await this.getProducts();
+    const productList = await this.productsFile(this.path, this.format);
     let count = 0;
     productList.forEach((product) => {
       if (product.id > count) {
@@ -59,7 +69,7 @@ export default class productManager {
     ) {
       return { success: false, message: "Error: Missing Variables" };
     }
-    const productList = await this.getProducts();
+    const productList = await this.productsFile(this.path, this.format);
     // codigo para impedir la repeticion de la variable "code"
     const codeExists = productList.find((product) => product.code === code);
     if (codeExists) {
@@ -89,10 +99,23 @@ export default class productManager {
 
   // buscador de producto por id
   getProductById = async (id) => {
-    const productList = await this.getProducts();
-    const product = productList.find((product) => product.id === id);
-    return product;
+    try {
+      const products = await this.productsFile(this.path, this.format)
+      if (products.length === 0) {
+        return { success: false, message: "No products found" };
+      }
+      const product = products.find((product) => product.id === id);
+      if (product) {
+        return { success: true, product };
+      } else {
+        return { success: false, message: "Product Not Found" };
+      }
+    } catch (error) {
+      console.error(error);
+      return { success: false, message: "Internal Server Error" };
+    }
   };
+  
 
   // actualiza el producto usando su id para buscarlo
   updateProduct = async (
@@ -115,7 +138,7 @@ export default class productManager {
       stock,
       code,
     };
-    const productList = await this.getProducts();
+    const productList = await this.productsFile(this.path, this.format)
     const product = await this.getProductById(id);
 
     if (product) {
@@ -138,7 +161,7 @@ export default class productManager {
 
   // funcion para borra producto por id
   deleteProduct = async (id) => {
-    let productlist = await this.getProducts();
+    let productlist = await await this.productsFile(this.path, this.format)
     try {
       const index = productlist.findIndex((prod) => prod.id === id);
       if (index !== -1) {
