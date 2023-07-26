@@ -8,9 +8,9 @@ export default class productManager {
   }
 
 
-  productsFile = async (filePath, format) => {
+  productsFile = async () => {
     try {
-      const content = await fs.promises.readFile(filePath, format);
+      const content = await fs.promises.readFile(this.path, this.format);
       return JSON.parse(content.toString());
     } catch (error) {
       console.error("Error reading products file:", error);
@@ -181,3 +181,4 @@ export default class productManager {
     }
   };
 }
+
