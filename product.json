@@ -75,16 +75,5 @@
         "category": "art supplies",
         "code": "ABC5",
         "stock": 20
-    },
-    {
-        "id": 11,
-        "title": "assorted pencils",
-        "description": "pencils",
-        "price": "$50",
-        "status": true,
-        "thumbnail": "http.....",
-        "category": "art supplies",
-        "code": "ABC22",
-        "stock": 20
     }
 ]
