@@ -45,7 +45,7 @@ router.post("/", async (req, res) => {
   const { title, description, price, thumbnail, category, stock, code } =
     req.body;
   try {
-    await productManagerImport.addProduct(
+    const productCreated= await productManagerImport.addProduct(
       title,
       description,
       price,
@@ -54,7 +54,10 @@ router.post("/", async (req, res) => {
       stock,
       code
     );
-    res.status(201).json({ message: "Product added successfully" });
+    if (!productCreated.success) {
+      return res.status(400).json({ error: productCreated.message });
+    }
+    return res.status(201).json({ message: "Product added successfully" });
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });
   }
