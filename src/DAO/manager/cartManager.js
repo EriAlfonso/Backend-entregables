@@ -9,7 +9,6 @@ export default class cartManager {
     this.path = path;
     this.format = "utf-8";
   }
-
   
   cartsFile = async () => {
     try {

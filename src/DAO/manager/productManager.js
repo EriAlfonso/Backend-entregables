@@ -7,6 +7,7 @@ export default class productManager {
     this.format = "utf-8";
   }
 
+
   productsFile = async () => {
     try {
       const content = await fs.promises.readFile(this.path, this.format);

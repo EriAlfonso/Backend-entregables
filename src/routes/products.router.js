@@ -1,13 +1,12 @@
-import { Router } from "express";
-import productManager from "../manager/productManager.js";
+import { Router } from 'express';
+import productManager from '../DAO/manager/productManager.js';
 
 const router = Router();
 
 // import de product manager
-const productManagerImport = new productManager("./product.json");
+const productManagerImport = new productManager('../product.json');
 
 // PRODUCT
-
 // get con soporte para ?limit=
 router.get("/", async (req, res) => {
   try {
