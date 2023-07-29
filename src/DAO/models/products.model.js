@@ -11,7 +11,7 @@ const productSchema = new mongoose.Schema({
 
     thumbnail: String,
 
-    code: { String, unique: true },
+    code: { type: String, unique: true },
 
     stock: Number,
 

@@ -1,5 +1,6 @@
 import { Router } from "express";
-import cartManager from "../DAO/manager/cartManager.js";
+import cartManager from "../../DAO/manager/cartManager.js";
+
 
 const router = Router();
 
@@ -10,7 +11,7 @@ const cartManagerImport = new cartManager("../cart.json");
 router.post("/", async (req, res) => {
   try {
     // usamos el create cart para crear el carrito
-    await cartManagerImport.createCart();
+    await find();
     res.status(201).json({ message: "Cart created successfully" });
   } catch (error) {
     console.error(error);

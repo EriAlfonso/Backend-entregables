@@ -1,15 +1,18 @@
 import express from "express";
-import cartRouter from "./routes/carts.router.js";
+import cartRouter from "./routes/mongoRouters/carts.router.js";
 import { Server } from "socket.io";
-import productRouter from "./routes/products.router.js";
+import productRouter from "./routes/mongoRouters/products.router.js";
 import viewsRouter from "./routes/views.router.js";
 import handlebars from "express-handlebars";
 import __dirname from "./utils.js";
 import productManager from "./DAO/manager/productManager.js";
+import mongoose from "mongoose";
+
 
 // import product manager
 const productManagerImport = new productManager("./product.json");
 
+const mongoURL= "mongodb+srv://thecheesegw2:rR4XFxtyluPWOvpt@ecommerce.e86wvix.mongodb.net/?retryWrites=true&w=majority"
 
 // import de express
 const app = express();
@@ -31,6 +34,17 @@ app.use("/api/products", productRouter);
 
 // port con mensaje para validar que funcione
 const httpServer = app.listen(8080, () => console.log("Server is Running.."));
+
+// conneccion a mongo 
+mongoose.connect(mongoURL, {
+  dbName: "ecommerce",
+})
+.then(() => {
+  console.log("DB connected");
+})
+.catch((error) => {
+  console.error(error);
+});
 
 // server con io
 const io = new Server(httpServer);

@@ -16,6 +16,6 @@ const cartSchema = new mongoose.Schema({
 })
 
 mongoose.set("strictQuery", false)
-const CartModel = mongoose.model(cartCollection, cartSchema)
+const cartModel = mongoose.model(cartCollection, cartSchema)
 
-export default CartModel
+export default cartModel
