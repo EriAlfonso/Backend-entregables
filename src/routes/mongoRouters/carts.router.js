@@ -20,14 +20,12 @@ router.post("/", async (req, res) => {
     try {
       const cart = await cartManagerImport.getCartById(cid);
       const product = await productManager.getProductById(pid);
-      const productTitle = product.title;
   
       const validate = cart.products.find((el) => el._id === pid);
   
       if (validate === undefined) {
         const newProduct = {
           _id: product._id,
-          title: productTitle,
           quantity: quantity,
         };
   
@@ -45,7 +43,6 @@ router.post("/", async (req, res) => {
   
         const updatedProduct = {
           _id: product._id,
-          title: productTitle,
           quantity: updatedQuantity
         }
   
