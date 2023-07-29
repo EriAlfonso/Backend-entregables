@@ -75,7 +75,7 @@ export default class productManager {
     if (codeExists) {
       return {
         success: false,
-        message: "roduct with code ${code} already exists.",
+        message: `product with code ${code} already exists.`,
       };
     }
     // id creado automaticamente

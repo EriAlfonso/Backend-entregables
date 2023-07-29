@@ -4,7 +4,9 @@ const messagesCollection = "messages"
 
 const messagesSchema = new mongoose.Schema({
     user: String,
-    message: String
+    time: String,
+    message: String,
+
 })
 
 mongoose.set("strictQuery", false)

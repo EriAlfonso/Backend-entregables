@@ -2,28 +2,21 @@ import productModel from "../models/products.model.js";
 
 export default class productManager{
 
-    getNewId= async () => {
-        const count = await productModel.count();
-        const nextId = count > 0 ? this.products[count - 1].id + 1 : 1;
-        return nextId;
-    };
 
     addProduct = async (product) => {
         try {
           const validate = await productModel.findOne({ code: product.code });
           if (validate) {
-            console.log(`The product with code: ${product.code} already exists`);
-            throw new Error(
-              `The product with code: ${product.code} already exists`
-            );
+            return {
+              message: `product with code ${code} already exists.`,
+            };
           } else {
             product.status = true;
-    
             await productModel.create(product);
-            return "Product created successfully";
+            return {success:true, message:"Product created successfully"};
           }
-        } catch (err) {
-          throw err;
+        } catch (error) {
+          throw error;
         }
       };
     
@@ -43,8 +36,8 @@ export default class productManager{
           const product = await productModel.findById(id);
     
           return product;
-        } catch (err) {
-          throw err;
+        } catch (error) {
+          throw error;
         }
       };
     

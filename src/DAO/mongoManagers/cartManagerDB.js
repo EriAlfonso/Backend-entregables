@@ -2,11 +2,6 @@ import cartModel from "../models/carts.model.js";
 
 export default 
 class CartManager {
-    getNewId= async () => {
-        const count = await cartModel.count();
-        const nextId = count > 0 ? this.products[count - 1].id + 1 : 1;
-        return nextId;
-    };
 
   createCart = async () => {
     try {
