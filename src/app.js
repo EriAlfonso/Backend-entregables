@@ -5,12 +5,12 @@ import productRouter from "./routes/mongoRouters/products.router.js";
 import viewsRouter from "./routes/views.router.js";
 import handlebars from "express-handlebars";
 import __dirname from "./utils.js";
-import productManager from "./DAO/manager/productManager.js";
+import productManager from "./DAO/mongoManagers/productManagerDB.js";
 import mongoose from "mongoose";
 
 
 // import product manager
-const productManagerImport = new productManager("./product.json");
+const productManagerImport = new productManager();
 
 const mongoURL= "mongodb+srv://thecheesegw2:rR4XFxtyluPWOvpt@ecommerce.e86wvix.mongodb.net/?retryWrites=true&w=majority"
 
@@ -62,10 +62,10 @@ io.on("connection", (socket) => {
       stock,
       code
     );
-    const products = await productManagerImport.productsFile();
+    const products = await productManagerImport.getProducts();
 
     io.emit("realtimetable", products);
   });
 });
 
-// 16:56
+

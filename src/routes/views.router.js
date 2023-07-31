@@ -1,10 +1,10 @@
 import { Router } from "express";
-import productManager from "../DAO/manager/productManager.js";
+import productManager from "../DAO/mongoManagers/productManagerDB.js";
 
 const router = Router();
 
 // import de product manager para incorporar productos
-const productManagerImport = new productManager("./product.json");
+const productManagerImport = new productManager();
 
 // routers para los views
 router.get("/", (req, res) => {
@@ -12,12 +12,13 @@ router.get("/", (req, res) => {
 });
 
 router.get("/home", async (req, res) => {
-    const products = await productManagerImport.productsFile();
+    const products = await productManagerImport.getProducts();
+    console.log(products)
     res.render("home", { products });
 });
 
 router.get("/realTimeProducts", async (req, res) => {
-    const products = await productManagerImport.productsFile();
+    const products = await productManagerImport.getProducts();
     res.render("realTimeProducts", { products });
 });
 

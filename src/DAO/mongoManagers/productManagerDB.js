@@ -3,33 +3,43 @@ import productModel from "../models/products.model.js";
 export default class productManager{
 
 
-    addProduct = async (product) => {
-        try {
-          const validate = await productModel.findOne({ code: product.code });
-          if (validate) {
-            return {
-              message: `product with code ${code} already exists.`,
-            };
-          } else {
-            product.status = true;
-            await productModel.create(product);
-            return {success:true, message:"Product created successfully"};
-          }
-        } catch (error) {
-          throw error;
-        }
-      };
+  addProduct = async (title, description, price, thumbnail, category, stock, code) => {
+    try {
+      const validate = await productModel.findOne({ code });
+      if (validate) {
+        return {
+          success: false,
+          message: `Product with code ${code} already exists.`,
+        };
+      } else {
+        const newProduct = {
+          title,
+          description,
+          price,
+          thumbnail,
+          category,
+          stock,
+          code,
+          status: true, 
+        };
+  
+        await productModel.create(newProduct);
+        return { success: true, message: "Product created successfully" };
+      }
+    } catch (error) {
+      throw error;
+    }
+  };
     
       getProducts = async () => {
         try {
-          const products = productModel.find();
-    
-          return products;
-        } catch (err) {
-          console.log("Products not found");
-          return [];
+          const products = await productModel.find().lean().exec();
+          return { success: true, products };
+        } catch (error) {
+          console.error(error);
+          return { success: false, message: "Internal Server Error" };
         }
-      };
+      }
     
       getProductById = async (id) => {
         try {
@@ -61,18 +71,17 @@ export default class productManager{
         }
       };
     
-      deleteProduct = async (id) => {
+      deleteProduct = async (_id) => {
         try {
-          const productDeleted = await productModel.findByIdAndDelete(id);
+          const productDeleted = await productModel.findByIdAndDelete(_id);
     
           if (productDeleted === null) {
-            console.log("Product does not exist");
             throw new Error("Product does not exist");
           }
     
           return "Product removed successfully";
-        } catch (err) {
-          throw err;
+        } catch (error) {
+          throw error;
         }
       };
     

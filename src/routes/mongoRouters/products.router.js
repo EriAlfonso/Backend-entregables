@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import productManager from '../../DAO/mongoManagers/productManagerDB.js';
 
 const router = Router();
 
@@ -6,31 +7,33 @@ const router = Router();
 const productManagerImport = new productManager();
 
 router.post("/", async (req, res) => {
-    const { title, description, price, code, stock, category,thumbnail } = req.body;
-  
-    if (!title || !description || !code || !price || !stock || !category ||!thumbnail) {
-      return res.status(400).json({ error400: "All fields are required" });
+  const { title, description, price, code, stock, category, thumbnail } = req.body;
+
+  if (!title || !description || !code || !price || !stock || !category || !thumbnail) {
+    return res.status(400).json({ error: "All fields are required" });
+  }
+
+  try {
+    const product = {
+      title,
+      description,
+      price,
+      thumbnail,
+      code,
+      stock,
+      category,
+    };
+
+    await productManagerImport.addProduct(product);
+    res.status(201).json("Product created successfully");
+  } catch (err) {
+    if (err.message.includes("Product with code")) {
+      res.status(409).json({ error: err.message });
+    } else {
+      res.status(500).json({ error: "Internal Server Error" });
     }
-  
-    try {
-      const product = {
-        title,
-        description,
-        price,
-        thumbnail,
-        code,
-        stock,
-        category,
-      };
-  
-      await productManagerImport.addProduct(product);
-      res.status(201).json("Product created successfully");
-    } catch (err) {
-      if (err.message.includes("The product with")) {
-        res.status(409).json({ error409: err.message });
-      }
-    }
-  });
+  }
+});
   
   router.get("/", async (req, res) => {
     const { limit } = req.query;
@@ -80,16 +83,14 @@ router.post("/", async (req, res) => {
   });
   
   router.delete("/:pid", async (req, res) => {
-    const { pid } = req.params;
+    const productid = req.params;
     try {
-      let status = await productManagerImport.deleteProduct(pid);
-  
-      res.status(200).json(`Product with id: ${pid} was removed`);
-    } catch (err) {
-      if (err.message.includes("Product does")) {
-        res.status(404).json({ error400: err.message });
-      }
+      let status = await productManagerImport.deleteProduct(productid);
+      res.json({ success: true, status });
+    } catch (error) {
+      res.status(404).json({ success: false, message: error.message });
     }
-  });
+    }
+  );
   
   export default router;
