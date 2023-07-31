@@ -1,9 +1,11 @@
 import { Router } from "express";
 import cartManager from "../../DAO/mongoManagers/cartManagerDB.js";
+import productManager from "../../DAO/mongoManagers/productManagerDB.js";
 
 const router = Router();
 
-const cartManagerImport= new cartManager()
+const cartManagerImport= new cartManager();
+const productManagerImport= new productManager();
 
 router.post("/", async (req, res) => {
     try {
@@ -14,12 +16,17 @@ router.post("/", async (req, res) => {
     }
   });
   
+
+  
   router.post("/:cid/product/:pid", async (req, res) => {
     const { cid, pid } = req.params;
     const quantity = req.body.quantity || 1;
     try {
       const cart = await cartManagerImport.getCartById(cid);
-      const product = await productManager.getProductById(pid);
+      const product = await productManagerImport.getProductById(pid);
+
+      console.log(cart)
+      console.log(product)
   
       const validate = cart.products.find((el) => el._id === pid);
   

@@ -18,7 +18,7 @@ class CartManager {
 
   getCarts = async () => {
     try {
-      const carts = cartModel.find();
+      const carts =await cartModel.find();
 
       return carts;
     } catch {
