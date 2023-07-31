@@ -14,24 +14,15 @@ router.post("/", async (req, res) => {
   }
 
   try {
-    const product = {
-      title,
-      description,
-      price,
-      thumbnail,
-      code,
-      stock,
-      category,
-    };
+    const result = await productManagerImport.addProduct(title, description, price, thumbnail, category, stock, code);
 
-    await productManagerImport.addProduct(product);
-    res.status(201).json("Product created successfully");
-  } catch (err) {
-    if (err.message.includes("Product with code")) {
-      res.status(409).json({ error: err.message });
+    if (result.success) {
+      return res.status(201).json({ message: result.message });
     } else {
-      res.status(500).json({ error: "Internal Server Error" });
+      return res.status(409).json({ error: result.message });
     }
+  } catch (err) {
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 });
   
@@ -46,7 +37,7 @@ router.post("/", async (req, res) => {
         res.status(206).json(limitedProducts);
       }
     } catch (err) {
-      res.status(400).json({ error400: "Bad Request" });
+      res.status(400).json({ error400: "Server Error" });
     }
   });
   
@@ -83,7 +74,7 @@ router.post("/", async (req, res) => {
   });
   
   router.delete("/:pid", async (req, res) => {
-    const productid = req.params;
+    const productid = req.params.pid;
     try {
       let status = await productManagerImport.deleteProduct(productid);
       res.json({ success: true, status });
