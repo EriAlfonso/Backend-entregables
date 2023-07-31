@@ -13,13 +13,22 @@ router.get("/", (req, res) => {
 
 router.get("/home", async (req, res) => {
     const products = await productManagerImport.getProducts();
-    console.log(products)
-    res.render("home", { products });
+    const idString = products.products.map((product) => ({
+        ...product,
+        _id: product._id.toHexString(),
+      }));
+    
+      res.render("home", { products: idString });
 });
 
 router.get("/realTimeProducts", async (req, res) => {
     const products = await productManagerImport.getProducts();
-    res.render("realTimeProducts", { products });
+    const idString = products.products.map((product) => ({
+        ...product,
+        _id: product._id.toHexString(),
+      }));
+    
+    res.render("realTimeProducts", {  products: idString});
 });
 
 router.get("/add-products", async (req, res) => {

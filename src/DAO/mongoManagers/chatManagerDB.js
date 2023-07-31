@@ -1,4 +1,4 @@
-import messagesModel from "../models/messages.model";
+import messagesModel from "../models/messages.model.js";
 
 export default class chatManager{
     saveMessage = async (message) => {

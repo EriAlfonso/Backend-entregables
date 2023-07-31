@@ -59,6 +59,7 @@
             <td><strong>Code</strong></td>
             <td><strong>Stock</strong></td>
             <td><strong>Category</strong></td>
+            <td></td>
         </tr>
     </thead>
     <tbody id="realTimeTable">
@@ -71,6 +72,9 @@
             <td>{{this.code}}</td>
             <td>{{this.stock}}</td>
             <td>{{this.category}}</td>
+                        <td>
+        <button class="btn btn-danger delete-btn" id="deleteBtn_{{this._id}}">Delete</button>
+      </td>
         </tr>
         {{/each}}
     </tbody>
