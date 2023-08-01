@@ -55,13 +55,11 @@ router.post("/add-products", async (req, res) => {
 });
 
 router.get("/chat", async (req, res) => {
-    try {
         const messages = await chatManagerImport.getMessages();
         res.render("chat", { messages });
-      } catch (error) {
-        res.status(500).json({ error: "Internal Server Error" });
-      }
     });
+
+  
 router.post("/chat", async (req, res) => {
         const { user, message } = req.body;
         try {

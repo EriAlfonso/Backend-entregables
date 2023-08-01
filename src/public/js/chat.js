@@ -40,7 +40,7 @@ socket.on("userJoined", (username) => {
   
   async function loadPreviousMessages() {
     try {
-      const response = await fetch("/"); 
+      const response = await fetch("/chat"); 
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -51,4 +51,8 @@ socket.on("userJoined", (username) => {
       });
     } catch (error) {
       console.error("Error loading previous messages:", error);
-    }}
+    }
+  }
+  
+
+  document.addEventListener("DOMContentLoaded", loadPreviousMessages);

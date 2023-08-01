@@ -5,7 +5,6 @@ const chatCollection = "messages"
 const chatSchema = new mongoose.Schema({
     user: String,
     message: String,
-    timestamp: { type: Date, default: Date.now },
   });
 
   mongoose.set('strictQuery',false)

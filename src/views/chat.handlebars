@@ -6,8 +6,8 @@
 </div>
 <div id="messageLogs">
   {{#each messages}}
-    <div>{{user}}: {{message}}</div>
+    <div>{{this.user}}: {{this.message}}</div>
   {{/each}}
 </div>
-<script src="/socket.io/socket.io.js"></script>
+<script src="socket.io/socket.io.js"></script>
 <script src="static/js/chat.js"></script>

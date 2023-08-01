@@ -3,16 +3,19 @@ import chatManager from "../../DAO/mongoManagers/chatManagerDB.js"
 
 const router = Router();
 const chatManagerImport = new chatManager()
-
 router.get("/", async (req, res) => {
-    try {
-      const messages = await chatManagerImport.getMessages();
+  try {
+    const messages = await chatManagerImport.getMessages();
+    if (req.accepts("json")) {
+      res.json(messages);
+    } else {
       res.render("chat", { messages });
-    } catch (error) {
-      console.error("Error fetching chat messages:", error);
-      res.status(500).json({ error: "Internal Server Error" });
     }
-  });
+  } catch (error) {
+    console.error("Error fetching chat messages:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
   
   router.post("/", async (req, res) => {
     const { user, message } = req.query;
