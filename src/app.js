@@ -34,7 +34,7 @@ app.set("view engine", "handlebars");
 app.use("/", viewsRouter);
 app.use("/api/carts", cartRouter);
 app.use("/api/products", productRouter);
-app.use("/chat", chatRouter)
+app.use("/api/chat", chatRouter)
 
 // port con mensaje para validar que funcione
 const httpServer = app.listen(8080, () => console.log("Server is Running.."));
@@ -71,23 +71,24 @@ io.on("connection", (socket) => {
     io.emit("realtimetable", products);
   });
 });
+
 io.on("connection", (socket) => {
   let username;
+
 
   socket.on("setUsername", (name) => {
     username = name;
     io.emit("userJoined", username); 
   });
 
-  socket.on("sendMessage", async (messageData) => {
-    const { user, message } = messageData;
-    const formattedMessage = `${user}: ${message}`;
-    io.emit("receiveMessage", formattedMessage);
-    
-    try {
-      await chatManagerImport.saveMessage(user, message);
-    } catch (error) {
-      console.error("Error saving message to database:", error);
+
+  socket.on("sendMessage", (data) => {
+    io.emit("receiveMessage", data);
+  });
+
+  socket.on("disconnect", () => {
+    if (username) {
+      io.emit("userLeft", username);
     }
   });
 });

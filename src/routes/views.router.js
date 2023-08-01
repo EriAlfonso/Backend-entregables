@@ -62,4 +62,13 @@ router.get("/chat", async (req, res) => {
         res.status(500).json({ error: "Internal Server Error" });
       }
     });
+router.post("/chat", async (req, res) => {
+        const { user, message } = req.body;
+        try {
+          const savedMessage = await chatManagerImport.saveMessage(user, message);
+          res.json(savedMessage);
+        } catch (error) {
+          res.status(500).json({ error: "Internal Server Error" });
+        }
+      });
 export default router;

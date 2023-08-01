@@ -1,13 +1,13 @@
+
 <h1>Chat</h1>
 <div>
-  <i id="username"></i> <input id="chatbox" type="text">
+  <input id="chatbox" type="text" placeholder="Type your message">
+  <button id="sendButton">Send</button>
 </div>
 <div id="messageLogs">
   {{#each messages}}
-    <div>{{this.message}}</div>
+    <div>{{user}}: {{message}}</div>
   {{/each}}
 </div>
-
-
 <script src="/socket.io/socket.io.js"></script>
 <script src="static/js/chat.js"></script>

@@ -1,14 +1,15 @@
 import mongoose from "mongoose";
 
-const messagesCollection = "messages"
+const chatCollection = "messages"
 
-const messagesSchema = new mongoose.Schema({
+const chatSchema = new mongoose.Schema({
     user: String,
     message: String,
+    timestamp: { type: Date, default: Date.now },
+  });
 
-})
+  mongoose.set('strictQuery',false)
 
-mongoose.set("strictQuery", false)
-const messagesModel = mongoose.model(messagesCollection, messagesSchema)
+  const chatModel = mongoose.model(chatCollection, chatSchema);
 
-export default messagesModel
+  export default chatModel

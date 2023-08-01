@@ -39,7 +39,7 @@ socket.on('realtimetable', products => {
           const productId = product._id;
     
           try {
-            const response = await fetch(`/api/products/${productId}`, {
+            const response = await fetch(`/${productId}`, {
               method: 'DELETE',
             });
     
