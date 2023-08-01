@@ -4,7 +4,6 @@ const messagesCollection = "messages"
 
 const messagesSchema = new mongoose.Schema({
     user: String,
-    time: String,
     message: String,
 
 })

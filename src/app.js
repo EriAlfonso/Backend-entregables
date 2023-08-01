@@ -6,11 +6,14 @@ import viewsRouter from "./routes/views.router.js";
 import handlebars from "express-handlebars";
 import __dirname from "./utils.js";
 import productManager from "./DAO/mongoManagers/productManagerDB.js";
+import chatRouter from "./routes/mongoRouters/chat.router.js"
+import chatManager from "./DAO/mongoManagers/chatManagerDB.js";
 import mongoose from "mongoose";
 
 
 // import product manager
 const productManagerImport = new productManager();
+const chatManagerImport = new chatManager();
 
 const mongoURL= "mongodb+srv://thecheesegw2:rR4XFxtyluPWOvpt@ecommerce.e86wvix.mongodb.net/?retryWrites=true&w=majority"
 
@@ -31,6 +34,7 @@ app.set("view engine", "handlebars");
 app.use("/", viewsRouter);
 app.use("/api/carts", cartRouter);
 app.use("/api/products", productRouter);
+app.use("/chat", chatRouter)
 
 // port con mensaje para validar que funcione
 const httpServer = app.listen(8080, () => console.log("Server is Running.."));
@@ -65,6 +69,26 @@ io.on("connection", (socket) => {
     const products = await productManagerImport.getProducts();
 
     io.emit("realtimetable", products);
+  });
+});
+io.on("connection", (socket) => {
+  let username;
+
+  socket.on("setUsername", (name) => {
+    username = name;
+    io.emit("userJoined", username); 
+  });
+
+  socket.on("sendMessage", async (messageData) => {
+    const { user, message } = messageData;
+    const formattedMessage = `${user}: ${message}`;
+    io.emit("receiveMessage", formattedMessage);
+    
+    try {
+      await chatManagerImport.saveMessage(user, message);
+    } catch (error) {
+      console.error("Error saving message to database:", error);
+    }
   });
 });
 

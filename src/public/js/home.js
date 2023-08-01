@@ -44,7 +44,6 @@ socket.on('realtimetable', products => {
             });
     
             if (response.ok) {
-              // Refresh the page or update the product list after successful deletion
               location.reload();
             } else {
               throw new Error('Failed to delete product');

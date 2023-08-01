@@ -1,10 +1,14 @@
 import { Router } from "express";
 import productManager from "../DAO/mongoManagers/productManagerDB.js";
+import chatManager from "../DAO/mongoManagers/chatManagerDB.js";
+
+
 
 const router = Router();
 
 // import de product manager para incorporar productos
 const productManagerImport = new productManager();
+const chatManagerImport = new chatManager();
 
 // routers para los views
 router.get("/", (req, res) => {
@@ -50,4 +54,12 @@ router.post("/add-products", async (req, res) => {
     res.redirect("/home");
 });
 
+router.get("/chat", async (req, res) => {
+    try {
+        const messages = await chatManagerImport.getMessages();
+        res.render("chat", { messages });
+      } catch (error) {
+        res.status(500).json({ error: "Internal Server Error" });
+      }
+    });
 export default router;
