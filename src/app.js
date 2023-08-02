@@ -15,7 +15,7 @@ import mongoose from "mongoose";
 const productManagerImport = new productManager();
 const chatManagerImport = new chatManager();
 
-const mongoURL= "mongodb+srv://thecheesegw2:rR4XFxtyluPWOvpt@ecommerce.e86wvix.mongodb.net/?retryWrites=true&w=majority"
+const mongoURL = "mongodb+srv://thecheesegw2:rR4XFxtyluPWOvpt@ecommerce.e86wvix.mongodb.net/?retryWrites=true&w=majority"
 
 // import de express
 const app = express();
@@ -43,12 +43,12 @@ const httpServer = app.listen(8080, () => console.log("Server is Running.."));
 mongoose.connect(mongoURL, {
   dbName: "ecommerce",
 })
-.then(() => {
-  console.log("DB connected");
-})
-.catch((error) => {
-  console.error(error);
-});
+  .then(() => {
+    console.log("DB connected");
+  })
+  .catch((error) => {
+    console.error(error);
+  });
 
 // server con io
 const io = new Server(httpServer);
@@ -78,7 +78,7 @@ io.on("connection", (socket) => {
 
   socket.on("setUsername", (name) => {
     username = name;
-    io.emit("userJoined", username); 
+    io.emit("userJoined", username);
   });
 
 

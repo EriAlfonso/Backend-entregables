@@ -20,9 +20,9 @@ router.get("/home", async (req, res) => {
     const idString = products.products.map((product) => ({
         ...product,
         _id: product._id.toHexString(),
-      }));
-    
-      res.render("home", { products: idString });
+    }));
+
+    res.render("home", { products: idString });
 });
 
 router.get("/realTimeProducts", async (req, res) => {
@@ -30,9 +30,9 @@ router.get("/realTimeProducts", async (req, res) => {
     const idString = products.products.map((product) => ({
         ...product,
         _id: product._id.toHexString(),
-      }));
-    
-    res.render("realTimeProducts", {  products: idString});
+    }));
+
+    res.render("realTimeProducts", { products: idString });
 });
 
 router.get("/add-products", async (req, res) => {
@@ -55,18 +55,18 @@ router.post("/add-products", async (req, res) => {
 });
 
 router.get("/chat", async (req, res) => {
-        const messages = await chatManagerImport.getMessages();
-        res.render("chat", { messages });
-    });
+    const messages = await chatManagerImport.getMessages();
+    res.render("chat", { messages });
+});
 
-  
+
 router.post("/chat", async (req, res) => {
-        const { user, message } = req.body;
-        try {
-          const savedMessage = await chatManagerImport.saveMessage(user, message);
-          res.json(savedMessage);
-        } catch (error) {
-          res.status(500).json({ error: "Internal Server Error" });
-        }
-      });
+    const { user, message } = req.body;
+    try {
+        const savedMessage = await chatManagerImport.saveMessage(user, message);
+        res.json(savedMessage);
+    } catch (error) {
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
 export default router;

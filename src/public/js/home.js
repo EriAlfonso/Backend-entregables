@@ -32,25 +32,6 @@ socket.on('realtimetable', products => {
             `
     })
     newTable.innerHTML = html
+});
 
-    products.forEach(product => {
-        const deleteBtn = document.getElementById(`deleteBtn_${product._id}`);
-        deleteBtn.addEventListener('click', async (event) => {
-          const productId = product._id;
-    
-          try {
-            const response = await fetch(`/${productId}`, {
-              method: 'DELETE',
-            });
-    
-            if (response.ok) {
-              location.reload();
-            } else {
-              throw new Error('Failed to delete product');
-            }
-          } catch (error) {
-            console.error(error);
-          }
-        });
-      });
-    });
+

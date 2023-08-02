@@ -1,7 +1,7 @@
 import cartModel from "../models/carts.model.js";
 
-export default 
-class CartManager {
+export default
+  class CartManager {
 
   createCart = async () => {
     try {
@@ -18,7 +18,7 @@ class CartManager {
 
   getCarts = async () => {
     try {
-      const carts =await cartModel.find();
+      const carts = await cartModel.find();
 
       return carts;
     } catch {
@@ -31,7 +31,7 @@ class CartManager {
     try {
       const cart = await cartModel.findById(id);
 
-      if(cart === null) {
+      if (cart === null) {
         console.error(`Cart with id: ${id} does not exist`);
         throw new Error(`Cart with id: ${id} does not exist`);
       }

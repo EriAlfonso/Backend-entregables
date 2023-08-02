@@ -30,29 +30,29 @@ socket.on("receiveMessage", (data) => {
 });
 
 socket.on("userJoined", (username) => {
-    addMessage(`${username} has joined the chat.`);
-  });
-  
+  addMessage(`${username} has joined the chat.`);
+});
 
-  socket.on("userLeft", (username) => {
-    addMessage(`${username} has left the chat.`);
-  });
-  
-  async function loadPreviousMessages() {
-    try {
-      const response = await fetch("/chat"); 
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-  
-      const messages = await response.json();
-      messages.forEach((message) => {
-        addMessage(message);
-      });
-    } catch (error) {
-      console.error("Error loading previous messages:", error);
+
+socket.on("userLeft", (username) => {
+  addMessage(`${username} has left the chat.`);
+});
+
+async function loadPreviousMessages() {
+  try {
+    const response = await fetch("/chat");
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
     }
-  }
-  
 
-  document.addEventListener("DOMContentLoaded", loadPreviousMessages);
+    const messages = await response.json();
+    messages.forEach((message) => {
+      addMessage(message);
+    });
+  } catch (error) {
+    console.error("Error loading previous messages:", error);
+  }
+}
+
+
+document.addEventListener("DOMContentLoaded", loadPreviousMessages);

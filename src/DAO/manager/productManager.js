@@ -161,10 +161,11 @@ export default class productManager {
             this.format
           );
           return { success: true, updatedProduct };
-        } }
-        else {
-          return { success: false, message: "Product not found" };
         }
+      }
+      else {
+        return { success: false, message: "Product not found" };
+      }
     } catch (error) {
       return { success: false, message: "Error updating the product" };
     }

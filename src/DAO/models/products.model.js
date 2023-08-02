@@ -20,8 +20,8 @@ const productSchema = new mongoose.Schema({
     status: Boolean,
 });
 
-mongoose.set('strictQuery',false)
+mongoose.set('strictQuery', false)
 
-const productModel= mongoose.model(productCollection, productSchema)
+const productModel = mongoose.model(productCollection, productSchema)
 
 export default productModel
