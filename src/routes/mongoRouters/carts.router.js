@@ -16,60 +16,36 @@ router.post("/", async (req, res) => {
   }
 });
 
-
-
 router.post("/:cid/product/:pid", async (req, res) => {
   const { cid, pid } = req.params;
   const quantity = req.body.quantity || 1;
+
   try {
     const cart = await cartManagerImport.getCartById(cid);
     const product = await productManagerImport.getProductById(pid);
 
-    console.log(cart)
-    console.log(product)
+    const productIndex = cart.products.findIndex((el) => el._id.toString() === pid);
 
-    const validate = cart.products.find((el) => el._id === pid);
-
-    if (validate === undefined) {
+    if (productIndex === -1) {
       const newProduct = {
         _id: product._id,
         quantity: quantity,
       };
-
       cart.products.push(newProduct);
-      let newCart = cart.products;
-
-      const updatedCart = await cartManagerImport.updateCart(cid, newCart);
-      res.status(200).json("New product added");
     } else {
-      let newCart = cart.products;
-      const productPosition = cart.products.findIndex((el) => el._id === pid);
-      const updatedQuantity = newCart[productPosition].quantity = quantity;
-
-      console.log(updatedQuantity);
-
-      const updatedProduct = {
-        _id: product._id,
-        quantity: updatedQuantity
-      }
-
-      console.log(updatedProduct);
-
-
-      const updatedCart = await cartManagerImport.updateCart(cid, newCart);
-
-      console.log(updatedCart);
-
-
-      res.status(200).json("Product quantity updated");
+      cart.products[productIndex].quantity += quantity;
     }
+
+    await cartManagerImport.updateCart(cid, cart.products);
+    res.status(200).json("Product added or quantity updated");
   } catch (err) {
     if (err.message.includes("Cart with id")) {
       res.status(404).json({ error404: err.message });
+    } else {
+      res.status(500).json({ error: "Internal Server Error" });
     }
   }
 });
-
 
 router.get("/:cid", async (req, res) => {
   let { cid } = req.params;

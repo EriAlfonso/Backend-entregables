@@ -13,8 +13,6 @@ const sendButton = document.getElementById("sendButton");
 sendButton.addEventListener("click", () => {
   const message = chatboxInput.value.trim();
   if (message !== "") {
-    console.log("Username:", username); 
-    console.log("Message:", message); 
     socket.emit("saveMessage", { user:username, message});
     chatboxInput.value = "";
   }
@@ -31,30 +29,14 @@ socket.on("receiveMessage", (data) => {
   addMessage(data);
 });
 
+
 socket.on("userJoined", (username) => {
-  addMessage(`${username} has joined the chat.`);
+  addMessage({user:username, message: `has joined the chat.`});
 });
 
 
 socket.on("userLeft", (username) => {
-  addMessage(`${username} has left the chat.`);
+  addMessage({user:username, message: `has left the chat.`});
 });
 
-async function loadPreviousMessages() {
-  try {
-    const response = await fetch("/chat");
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
 
-    const messages = await response.json();
-    messages.forEach((message) => {
-      addMessage(message);
-    });
-  } catch (error) {
-    console.error("Error loading previous messages:", error);
-  }
-}
-
-
-document.addEventListener("DOMContentLoaded", loadPreviousMessages);
