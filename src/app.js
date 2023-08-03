@@ -23,7 +23,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // set de static
-app.use("/static", express.static("./src/public"));
+app.use(express.static("./src/public"));
 
 // set de handlebars
 app.engine(`handlebars`, handlebars.engine());
@@ -68,7 +68,7 @@ io.on("connection", (socket) => {
     );
     const products = await productManagerImport.getProducts();
 
-    io.emit("realtimetable", products);
+    io.emit("realtimetable", products.products);
   });
 });
 
@@ -81,11 +81,14 @@ io.on("connection", (socket) => {
     io.emit("userJoined", username);
   });
 
-
-  socket.on("sendMessage", (data) => {
-    io.emit("receiveMessage", data);
+  socket.on("saveMessage", async (data) => {
+    try {
+      const newMessage = await chatManagerImport.saveMessage(data.user, data.message);
+      io.emit("receiveMessage", newMessage);
+    } catch (error) {
+      console.error("Error saving chat message:", error);
+    }
   });
-
   socket.on("disconnect", () => {
     if (username) {
       io.emit("userLeft", username);

@@ -13,7 +13,9 @@ const sendButton = document.getElementById("sendButton");
 sendButton.addEventListener("click", () => {
   const message = chatboxInput.value.trim();
   if (message !== "") {
-    socket.emit("sendMessage", { user: username, message });
+    console.log("Username:", username); 
+    console.log("Message:", message); 
+    socket.emit("saveMessage", { user:username, message});
     chatboxInput.value = "";
   }
 });

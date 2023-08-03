@@ -18,7 +18,7 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const { user, message } = req.query;
+  const { user, message } = req.body;
   if (!user || !message) {
     return res.status(400).json({ error: "Both user and message are required" });
   }
