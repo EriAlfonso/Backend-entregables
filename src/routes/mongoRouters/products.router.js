@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import productManager from '../../DAO/mongoManagers/productManagerDB.js';
+import productModel from '../../DAO/models/products.model.js';
 
 const router = Router();
 
@@ -26,18 +27,21 @@ router.post("/", async (req, res) => {
   }
 });
 
+
 router.get("/", async (req, res) => {
-  const { limit } = req.query;
+  const options = {
+    limit: req.query.limit,
+    page: req.query.page,
+    query: req.query.queryParams,
+    sort: req.query.sort,
+  };
+
   try {
-    const products = await productManagerImport.getProducts();
-    if (!limit || limit < 1) {
-      res.status(200).json(products);
-    } else {
-      const limitedProducts = products.slice(0, limit);
-      res.status(206).json(limitedProducts);
-    }
-  } catch (err) {
-    res.status(400).json({ error400: "Server Error" });
+    const result = await productManagerImport.getProductsQuery(options);
+    res.json(result);
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 

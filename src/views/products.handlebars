@@ -1,0 +1,35 @@
+<h3>Product list</h3>
+<h4>Welcome {{user.role}} {{user.first_name}}!</h4>
+<div style="display: flex;flex-wrap: wrap; justify-content: center;">
+{{#each products}}
+<div class="card" style="width: 18rem; margin: 1rem;" >
+  <img src={{this.thumbnail}} class="card-img-top" alt="image">
+  <div class="card-body" style="display: flex; flex-direction: column;">
+    <h5 class="card-title">{{this.title}}</h5>
+    <ul class="list-group list-group-flush" style="flex-grow: 1;" >
+    <li class="list-group-item">category: {{this.category}}</li>
+    <li class="list-group-item">Price:$ <strong> {{this.price}}</strong></li>
+  </ul>
+
+    <a href="/products/{{this._id}}" class="btn btn-outline-success">Details</a>
+  </div>
+</div>
+{{/each}}
+</div>
+<nav style="display: flex; justify-content:center;">
+  <ul class="pagination">
+    {{#if hasPrevPage}}
+      <li class="page-item">
+        <a class="page-link" href="{{prevLink}}">Previous</a>
+      </li>
+    {{/if}}
+      <li class="page-item">
+        <a class="page-link" href="?page={{currentPage}}">{{currentPage}}</a>
+      </li>
+    {{#if hasNextPage}}
+      <li class="page-item">
+        <a class="page-link" href="{{nextLink}}">Next</a>
+      </li>
+    {{/if}}
+  </ul>
+</nav>
