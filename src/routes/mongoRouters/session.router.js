@@ -1,22 +1,19 @@
 import { Router } from "express";
 import userModel from "../../DAO/models/user.model.js";
+import { createHash, isValidPassword } from "../../utils.js";
+import passport from "passport";
 const router = Router();
 
-router.post('/login', async (req, res) => {
-    const { email, password } = req.body
-    const user = await userModel.findOne({ email, password })
-    if(!user) return res.redirect('login')
-
-    req.session.user = user
-    
+router.post('/login', passport.authenticate('login', '/login'), async (req, res) => {
+if (!req.user)return res.status(400).send ('Invalid User Data')
+    req.session.user = req.user
     return res.redirect('/products')
 })
 
-router.post('/register', async (req, res) => {
-    const user = req.body
-    await userModel.create(user)
-
-    return res.redirect('/login')
+router.post('/register',  passport.authenticate('register', {
+    failureRedirect: '/register'
+}), async (req, res) => {
+    res.redirect('/login')
 })
 
 export default router;

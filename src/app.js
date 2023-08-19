@@ -12,6 +12,8 @@ import sessionRouter from "./routes/mongoRouters/session.router.js"
 import productManager from "./DAO/mongoManagers/productManagerDB.js";
 import chatManager from "./DAO/mongoManagers/chatManagerDB.js";
 import session from "express-session";
+import initializePassport from "./config/passport.config.js";
+import passport from "passport";
 
 
 // import product manager
@@ -34,6 +36,7 @@ app.engine(`handlebars`, handlebars.engine());
 app.set("views", __dirname + "/views");
 app.set("view engine", "handlebars");
 
+
 app.use(session({
   store: MongoStore.create({
   mongoUrl: mongoURL,
@@ -49,6 +52,12 @@ resave: true,
 saveUninitialized: true,
 })
 );
+
+// set passport
+initializePassport()
+app.use(passport.initialize())
+app.use(passport.session())
+
 // import de routers
 app.use("/", viewsRouter);
 app.use("/api/carts", cartRouter);
