@@ -10,14 +10,16 @@ import viewsRouter from "./routes/views.router.js";
 import chatRouter from "./routes/mongoRouters/chat.router.js"
 import sessionRouter from "./routes/mongoRouters/session.router.js"
 import productManager from "./DAO/mongoManagers/productManagerDB.js";
+import cartManager from "./DAO/mongoManagers/cartManagerDB.js";
+import cartModel from "./DAO/models/carts.model.js";
 import chatManager from "./DAO/mongoManagers/chatManagerDB.js";
 import session from "express-session";
-import initializePassport from "./config/passport.config.js";
 import passport from "passport";
-
+import initializePassport from "./config/passport.config.js";
 
 // import product manager
 const productManagerImport = new productManager();
+const cartManagerImport = new cartManager();
 const chatManagerImport = new chatManager();
 
 const mongoURL = "mongodb+srv://thecheesegw2:rR4XFxtyluPWOvpt@ecommerce.e86wvix.mongodb.net/?retryWrites=true&w=majority"
@@ -36,20 +38,19 @@ app.engine(`handlebars`, handlebars.engine());
 app.set("views", __dirname + "/views");
 app.set("view engine", "handlebars");
 
-
 app.use(session({
   store: MongoStore.create({
-  mongoUrl: mongoURL,
-  dbName: "ecommerce",
-  mongoOptions: {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  },
-  ttl: 100,
-}),
-secret: "secret",
-resave: true,
-saveUninitialized: true,
+    mongoUrl: mongoURL,
+    dbName: "ecommerce",
+    mongoOptions: {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    },
+    ttl: 60 * 60 * 1000,
+  }),
+  secret: "secret",
+  resave: true,
+  saveUninitialized: true,
 })
 );
 
@@ -58,6 +59,26 @@ initializePassport()
 app.use(passport.initialize())
 app.use(passport.session())
 
+// codigo para el badge 
+app.use(async (req, res, next) => {
+  if (req.session?.user) {
+    const carts = await cartModel.find();
+    const cartID = carts ? carts[0]._id : null;
+
+    try {
+      const cart = await cartManagerImport.getCartByIdAndPopulate(cartID);
+      const cartItemCount = cart.products.reduce((total, product) => total + product.quantity, 0);
+      res.locals.cartItemCount = cartItemCount;
+    } catch (error) {
+      console.error("Error fetching cart:", error);
+      res.locals.cartItemCount = 0;
+    }
+  } else {
+    res.locals.cartItemCount = 0;
+  }
+
+  next();
+});
 // import de routers
 app.use("/", viewsRouter);
 app.use("/api/carts", cartRouter);

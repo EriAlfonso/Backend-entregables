@@ -1,23 +1,45 @@
 
-<table id="cartContentTable" class="table">
+<table id="cartContentTable" class="table table-hover">
     <thead>
         <tr>
             <td></td>
             <td><strong>Product</strong></td>
+            <td><strong>Quantity</strong></td>
             <td><strong>Price</strong></td>
+            <td><strong>Total</strong></td>
             <td></td>
         </tr>
     </thead>
-    <tbody>
+    <tbody id="realTimeCart">
         {{#each products}}
+        <tr>
         <td><img src="{{_id.thumbnail}}" style="width: 5rem;" alt="no image"></td>
             <td>{{_id.title}}</td>
+            <td>{{quantity}}</td>
             <td>{{_id.price}}</td>
+            <td>${{totalPrice}}</td>
             <td>
-
-                <button class="btn btn-danger delete-btn" id="deleteBtn{{_id._id}}">Delete</button>
+                <button class="btn btn-danger delete-btn" data-cartid="{{cartId}}" data-pid="{{_id._id}}">Delete</button>
             </td>
+            </tr>
         {{/each}}
     </tbody>
 </table>
+<table id="cartContentTable" class="table table-hover">
+    <thead>
+        <tr>
+            <th>Cart Total</th>
+        </tr>
 
+    </thead>
+    <tbody>
+        <tr>
+            <td>${{cartTotalPrice}}</td>
+        </tr>
+    </tbody>
+</table>
+
+
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/cart.js"></script>

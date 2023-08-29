@@ -23,13 +23,13 @@ router.get(
 )
 
 router.get(
-    '/githubLogin',
+    '/githubcallback',
     passport.authenticate('github', { failureRedirect: '/'}),
     async(req, res) => {
         console.log('Callback: ', req.user)
         req.session.user = req.user
         console.log(req.session)
-        res.redirect('/profile')
+        res.redirect('/products')
     }
 )
 export default router;
