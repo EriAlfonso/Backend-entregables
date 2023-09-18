@@ -2,7 +2,9 @@ import passport from "passport";
 import local from 'passport-local';
 import userModel from "../DAO/models/user.model.js";
 import githubStrategy from "passport-github2";
-import { createHash,isValidPassword } from "../utils.js";
+import { createHash,generateToken,isValidPassword } from "../utils.js";
+
+
 
 const LocalStrategy = local.Strategy
 
@@ -41,7 +43,7 @@ const initializePassport =() =>{
         passReqToCallback:true,
         usernameField:'email'
     }, async(req,username,password,done) =>{
-        const {first_name,last_name,email} =req.body
+        const {first_name,last_name,email,age,role} =req.body
         try{
             const user= await userModel.findOne({email:username})
             if (user){
@@ -56,7 +58,9 @@ const initializePassport =() =>{
                 role
             }
             const result = await userModel.create(newUser)
-            return done(null, result)
+            const access_token = generateToken(result) 
+            console.log(access_token)
+            return done(null, access_token)
         }
         catch(error){
             return done (error)

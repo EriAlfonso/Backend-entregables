@@ -16,6 +16,7 @@ router.post('/register',  passport.authenticate('register', {
 }), async (req, res) => {
     res.redirect('/login')
 })
+
 router.get(
     '/login-github',
     passport.authenticate('github', {scope: ['user:email'] }),
