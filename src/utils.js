@@ -24,12 +24,12 @@ export const authToken = (req, res, next) => {
     const authHeader = req.headers.auth
     if(!authHeader) {
         return res.status(401).send({
-            error: 'Not auth'
+            error: 'Not authorized'
         })
     }
     const token = authHeader
-    jwt.verify(token, PRIVATE_KEY, (error, credentials) => {
-        if(error) return res.status(403).send({error: 'Not authroized'})
+    jwt.verify(token, process.env.PRIVATE_KEY, (error, credentials) => {
+        if(error) return res.status(403).send({error: 'No access'})
         req.user = credentials.user
         next()
     })

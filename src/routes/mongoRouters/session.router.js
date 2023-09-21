@@ -1,7 +1,7 @@
 import userModel from "../../DAO/models/user.model.js";
 import { Router } from "express";
 import passport from "passport";
-import { createHash,isValidPassword } from "../../utils.js";
+import { createHash,isValidPassword,authToken } from "../../utils.js";
 
 const router = Router();
 
@@ -33,4 +33,9 @@ router.get(
         res.redirect('/products')
     }
 )
+
+router.get('/current', authToken, (req, res) => {
+    res.send({ status: 'success', payload: req.user })
+})
+
 export default router;

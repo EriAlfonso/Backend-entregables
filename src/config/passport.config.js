@@ -79,7 +79,9 @@ const initializePassport =() =>{
                 console.error('Invalid Password')
                 return done (null,false)
             }
-            return done (null,user)
+            const access_token = generateToken(user) 
+            console.log(access_token)
+            return done (null,user,access_token)
         } catch (error){
             return done (error)
         }
