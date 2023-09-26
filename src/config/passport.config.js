@@ -3,6 +3,7 @@ import local from 'passport-local';
 import userModel from "../DAO/models/user.model.js";
 import githubStrategy from "passport-github2";
 import { createHash,generateToken,isValidPassword } from "../utils.js";
+import jwt from "passport-jwt";
 
 
 
@@ -18,7 +19,6 @@ const initializePassport =() =>{
             callbackURL: 'http://localhost:8080/api/session/githubcallback'
         },
         async(accessToken,refreshToken,profile,done)=>{
-            console.log(profile)
             try{
                 const user= await userModel.findOne({email: profile._json.email})
                 if (user){
