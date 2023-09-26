@@ -21,11 +21,14 @@ export const generateToken = (user) => {
 }
 
 export const authToken = (req, res, next) => {
-    const authHeader = req.headers.auth
+    let authHeader = req.headers.auth
     if(!authHeader) {
-        return res.status(401).send({
-            error: 'Not authorized'
-        })
+        authHeader=req.cookies['UserJWTCookie']
+        if(!authHeader) {
+            return res.status(401).send({
+                error: 'Not authorized'
+            })
+        }
     }
     const token = authHeader
     jwt.verify(token, process.env.PRIVATE_KEY, (error, credentials) => {

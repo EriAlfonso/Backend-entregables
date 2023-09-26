@@ -4,6 +4,7 @@ import MongoStore from "connect-mongo";
 import __dirname from "./utils.js";
 import { Server } from "socket.io";
 import handlebars from "express-handlebars";
+import cookieParser from "cookie-parser";
 import cartRouter from "./routes/mongoRouters/carts.router.js";
 import productRouter from "./routes/mongoRouters/products.router.js";
 import viewsRouter from "./routes/views.router.js";
@@ -28,6 +29,8 @@ const mongoURL = "mongodb+srv://thecheesegw2:rR4XFxtyluPWOvpt@ecommerce.e86wvix.
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser('JWTCookieKey'))
+
 
 // set de static
 app.use(express.static("./src/public"));

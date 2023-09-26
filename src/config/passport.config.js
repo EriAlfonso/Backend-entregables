@@ -59,7 +59,6 @@ const initializePassport =() =>{
             }
             const result = await userModel.create(newUser)
             const access_token = generateToken(result) 
-            console.log(access_token)
             return done(null, access_token)
         }
         catch(error){
@@ -80,8 +79,8 @@ const initializePassport =() =>{
                 return done (null,false)
             }
             const access_token = generateToken(user) 
-            console.log(access_token)
-            return done (null,user,access_token)
+            user.access_token = access_token;
+            return done (null,user)
         } catch (error){
             return done (error)
         }

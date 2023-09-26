@@ -7,6 +7,12 @@ const router = Router();
 
 router.post('/login', passport.authenticate('login', '/login'), async (req, res) => {
 if (!req.user)return res.status(400).send ('Invalid User Data')
+const access_token = req.user.access_token; 
+console.log(access_token)
+res.cookie('UserJWTCookie', access_token, {
+    maxAge: 60 * 60 * 1000,
+    httpOnly: true,
+  });
     req.session.user = req.user
     return res.redirect('/products')
 })
@@ -14,7 +20,12 @@ if (!req.user)return res.status(400).send ('Invalid User Data')
 router.post('/register',  passport.authenticate('register', {
     failureRedirect: '/register'
 }), async (req, res) => {
-    res.redirect('/login')
+    res.
+    cookie("UserJWTCookie", (user.token = access_token), {
+        maxAge: 60 * 60 * 1000,
+        httpOnly: true,
+    })
+    redirect('/login')
 })
 
 router.get(
