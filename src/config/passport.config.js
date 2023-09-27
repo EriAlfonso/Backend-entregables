@@ -4,10 +4,20 @@ import userModel from "../DAO/models/user.model.js";
 import githubStrategy from "passport-github2";
 import { createHash,generateToken,isValidPassword } from "../utils.js";
 import jwt from "passport-jwt";
+import { config } from 'dotenv';
+config()
 
 
 
 const LocalStrategy = local.Strategy
+const JwtStrategy = jwt.Strategy
+const Extract =jwt.ExtractJwt
+
+const cookieExtractor = req => {
+    const token = (req?.cookies) ? req.cookies['UserJWTCookie'] : null
+    return token
+}
+
 
 const initializePassport =() =>{
 
@@ -86,6 +96,14 @@ const initializePassport =() =>{
         }
         }
     ))
+
+    passport.use('jwt', new JwtStrategy({
+        jwtFromRequest:Extract.fromExtractors([cookieExtractor]),
+        secretOrKey: process.env.PRIVATE_KEY
+    }),
+    async()=>{
+
+    })
 
 
     passport.serializeUser((user,done)=>{
