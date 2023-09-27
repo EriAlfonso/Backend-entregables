@@ -100,10 +100,16 @@ const initializePassport =() =>{
     passport.use('jwt', new JwtStrategy({
         jwtFromRequest:Extract.fromExtractors([cookieExtractor]),
         secretOrKey: process.env.PRIVATE_KEY
-    }),
-    async()=>{
+    },
+    async(jwt_payload,done)=>{
+        try{
+            return done(null,jwt_payload)
+        }
+        catch(error){
+            return done(error)
+        }
 
-    })
+    }))
 
 
     passport.serializeUser((user,done)=>{

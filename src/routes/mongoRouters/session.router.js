@@ -1,6 +1,6 @@
 import userModel from "../../DAO/models/user.model.js";
 import { Router } from "express";
-import passport from "passport";
+import passport, { session } from "passport";
 import { createHash,isValidPassword,authToken } from "../../utils.js";
 
 const router = Router();
@@ -45,7 +45,7 @@ router.get(
     }
 )
 
-router.get('/current', authToken, (req, res) => {
+router.get('/current', passport.authenticate('jwt',{session:false}), (req, res) => {
     res.send({ status: 'success', payload: req.user })
 })
 
