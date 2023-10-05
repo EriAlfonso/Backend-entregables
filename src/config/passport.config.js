@@ -24,8 +24,8 @@ const initializePassport =() =>{
     
     passport.use ('github', new githubStrategy(
         {
-            clientID: 'Iv1.f272c727f54cf4e3',
-            clientSecret:'066cab59a63d1fadfd934dbe0a96b32535e14140',
+            clientID: process.env.CLIENTID,
+            clientSecret: process.env.CLIENTSECRET,
             callbackURL: 'http://localhost:8080/api/session/githubcallback'
         },
         async(accessToken,refreshToken,profile,done)=>{
@@ -88,7 +88,7 @@ const initializePassport =() =>{
                 console.error('Invalid Password')
                 return done (null,false)
             }
-            const access_token = generateToken(user) 
+            const access_token = generateToken(user); 
             user.access_token = access_token;
             return done (null,user)
         } catch (error){

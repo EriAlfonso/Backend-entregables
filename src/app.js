@@ -17,14 +17,15 @@ import chatManager from "./DAO/mongoManagers/chatManagerDB.js";
 import session from "express-session";
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
+import { config } from 'dotenv';
+config()
 
 // import product manager
 const productManagerImport = new productManager();
 const cartManagerImport = new cartManager();
 const chatManagerImport = new chatManager();
 
-const mongoURL = "mongodb+srv://thecheesegw2:rR4XFxtyluPWOvpt@ecommerce.e86wvix.mongodb.net/?retryWrites=true&w=majority"
-
+const mongoURL = process.env.mongoURL;
 // import de express
 const app = express();
 app.use(express.json());
