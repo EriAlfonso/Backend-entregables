@@ -7,8 +7,7 @@ export default class CartManager {
         products: [],
       };
 
-      await cartModel.create(cart);
-      return "Cart created successfully";
+      return await cartModel.create(cart);;
     } catch (err) {
       throw err;
     }
@@ -100,16 +99,6 @@ export default class CartManager {
     await this.updateCart(cartId, cart.products);
   };
 
-  removeAllProductsFromCart = async (cartId) => {
-    try {
-      const cart = await this.getCartById(cartId);
-      cart.products = [];
-      await this.updateCart(cartId, cart.products);
-      return "All products removed from cart";
-    } catch (error) {
-      throw error;
-    }
-  };
 
   deleteCart = async (id) => {
     try {

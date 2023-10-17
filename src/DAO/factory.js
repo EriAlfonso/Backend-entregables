@@ -18,9 +18,9 @@ switch (config.persistence) {
         break;
 
     case "FILE" :
-        const {default: ProductsFile } = await import("./files/ProductManager.js");
-        const {default: CartsFile} = await import("./files/CartManager.js");
-        const {default: TicketFile } = await import("./files/TicketManager.js")
+        const {default: ProductsFile } = await import("./manager/productManager.js");
+        const {default: CartsFile} = await import("./manager/cartManager.js");
+        const {default: TicketFile } = await import("./manager/ticketManager.js")
         Products = ProductsFile
         Carts = CartsFile
         Ticket = TicketFile
@@ -28,10 +28,10 @@ switch (config.persistence) {
 
     case "MONGODB" :{
       
-        const {default: ProductsMongo } = await import("./mongo/product.services.js");
-        const {default: ViewMongo } = await import("./mongo/views.services.js");
-        const {default: CartsMongo} = await import("./mongo/cart.services.js");
-        const {default: TicketsMongo} = await import("./mongo/ticket.services.js")
+        const {default: ProductsMongo } = await import("./mongoManager/productManagerDB.js");
+        const {default: ViewMongo } = await import("./mongoManager/viewManagerDB.js");
+        const {default: CartsMongo} = await import("./mongoManager/cartManagerDB.js");
+        const {default: TicketsMongo} = await import("./mongoManager/ticketManagerDB.js")
         mongoose.connect(process.env.URL_MONGO, {
             dbName: "ecommerce"
           })
