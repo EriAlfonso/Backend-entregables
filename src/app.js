@@ -14,18 +14,14 @@ import productManager from "./DAO/mongoManagers/productManagerDB.js";
 import cartManager from "./DAO/mongoManagers/cartManagerDB.js";
 import cartModel from "./DAO/models/carts.model.js";
 import chatManager from "./DAO/mongoManagers/chatManagerDB.js";
-import session from "express-session";
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
-import { config } from 'dotenv';
-config()
+import config from "./config/config.js";
 
 // import product manager
 const productManagerImport = new productManager();
 const cartManagerImport = new cartManager();
 const chatManagerImport = new chatManager();
-
-const mongoURL = process.env.mongoURL;
 // import de express
 const app = express();
 app.use(express.json());
@@ -44,7 +40,7 @@ app.set("view engine", "handlebars");
 
 app.use(session({
   store: MongoStore.create({
-    mongoUrl: mongoURL,
+    mongoUrl: config.MONGO_URL,
     dbName: "ecommerce",
     mongoOptions: {
       useNewUrlParser: true,
@@ -52,7 +48,7 @@ app.use(session({
     },
     ttl: 60 * 60 * 1000,
   }),
-  secret: "secret",
+  secret: config.MONGO_SECRET,
   resave: true,
   saveUninitialized: true,
 })
