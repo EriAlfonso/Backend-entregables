@@ -4,8 +4,7 @@ import userModel from "../DAO/models/user.model.js";
 import githubStrategy from "passport-github2";
 import { createHash,generateToken,isValidPassword } from "../utils.js";
 import jwt from "passport-jwt";
-import { config } from 'dotenv';
-config()
+import config from "./config.js";
 
 
 
@@ -24,9 +23,9 @@ const initializePassport =() =>{
     
     passport.use ('github', new githubStrategy(
         {
-            clientID: process.env.CLIENTID,
-            clientSecret: process.env.CLIENTSECRET,
-            callbackURL: 'http://localhost:8080/api/session/githubcallback'
+            clientID: config.CLIENTID,
+            clientSecret: config.CLIENTSECRET,
+            callbackURL: config.CALLBACKURL,
         },
         async(accessToken,refreshToken,profile,done)=>{
             try{
@@ -99,7 +98,7 @@ const initializePassport =() =>{
 
     passport.use('jwt', new JwtStrategy({
         jwtFromRequest:Extract.fromExtractors([cookieExtractor]),
-        secretOrKey: process.env.PRIVATE_KEY
+        secretOrKey: config.PRIVATE_KEY
     },
     async(jwt_payload,done)=>{
         try{

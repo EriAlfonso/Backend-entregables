@@ -1,6 +1,6 @@
 import ticketModel from "../models/ticket.model.js";
 
-export default class TicketsMongo {
+export default class ticketManager {
     async addTicket(data) {
         try {
             if (data) return await ticketModel.create(data);

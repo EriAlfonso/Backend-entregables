@@ -4,6 +4,7 @@ import MongoStore from "connect-mongo";
 import __dirname from "./utils.js";
 import { Server } from "socket.io";
 import handlebars from "express-handlebars";
+import session from "express-session";
 import cookieParser from "cookie-parser";
 import cartRouter from "./routes/mongoRouters/carts.router.js";
 import productRouter from "./routes/mongoRouters/products.router.js";
@@ -28,6 +29,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser('JWTCookieKey'))
 
+const mongoUrl= config.MONGO_URL
 
 // set de static
 app.use(express.static("./src/public"));
@@ -40,7 +42,7 @@ app.set("view engine", "handlebars");
 
 app.use(session({
   store: MongoStore.create({
-    mongoUrl: config.MONGO_URL,
+    mongoUrl: mongoUrl,
     dbName: "ecommerce",
     mongoOptions: {
       useNewUrlParser: true,
@@ -90,7 +92,7 @@ app.use("/api/session", sessionRouter)
 const httpServer = app.listen(8080, () => console.log("Server is Running.."));
 
 // conneccion a mongo 
-mongoose.connect(mongoURL, {
+mongoose.connect(mongoUrl, {
   dbName: "ecommerce",
 })
   .then(() => {
