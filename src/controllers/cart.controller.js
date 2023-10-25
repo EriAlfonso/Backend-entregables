@@ -1,6 +1,6 @@
 import cartManager from "../DAO/mongoManagers/cartManagerDB.js";
 import cartModel from "../DAO/models/carts.model.js";
-
+import cartService from "../services/cart.service.js";
 const cartManagerImport = new cartManager();
 
 export default class cartController {
