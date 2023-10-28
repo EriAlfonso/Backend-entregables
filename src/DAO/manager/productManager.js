@@ -1,6 +1,5 @@
 import fs from "fs";
 
-// creamos la clase ProductManager y la exportamos
 export default class productManager {
   constructor(path) {
     this.path = path;
@@ -17,8 +16,6 @@ export default class productManager {
       return [];
     }
   };
-
-  // muestra todos los productos en el array
   getProducts = async (limit) => {
     const products = await this.productsFile(this.path, this.format);
     if (products.length === 0) {
@@ -34,7 +31,6 @@ export default class productManager {
     return { success: true, products };
   };
 
-  // funcion para crear el id o code
   getNewId = async () => {
     const productList = await this.productsFile(this.path, this.format);
     let count = 0;

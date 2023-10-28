@@ -1,21 +1,18 @@
-import productManager from "../DAO/mongoManagers/productManagerDB.js";
-import cartModel from "../DAO/models/carts.model.js";
-
-const productManagerImport = new productManager();
+import productService from "../services/product.service.js";
 
 export default class productController {
     async indexView(req, res) {
         res.render("index", {});
-    };
+    }
 
     async getProductsHome(req, res) {
-        const products = await productManagerImport.getProducts();
+        const products = await productService.getProducts();
         const idString = products.products.map((product) => ({
             ...product,
             _id: product._id.toHexString(),
         }));
         res.render("home", { products: idString });
-    };
+    }
 
     async getProducts(req, res) {
         const options = {
@@ -26,7 +23,7 @@ export default class productController {
         };
         const user = req.session.user;
         try {
-            const result = await productManagerImport.getProductsQuery(options);
+            const result = await productService.getProductsQuery(options);
             res.render("products", {
                 user,
                 products: result.payload,
@@ -36,13 +33,13 @@ export default class productController {
                 hasNextPage: result.hasNextPage,
                 prevLink: result.prevLink,
                 nextLink: result.nextLink,
-                sort:options.sort
+                sort: options.sort,
             });
         } catch (error) {
             console.error("Error fetching products:", error);
             res.status(500).json({ error: "Internal Server Error" });
         }
-    };
+    }
 
     async getProductDetail(req, res) {
         let { pid } = req.params;
@@ -50,7 +47,7 @@ export default class productController {
         const cartID = carts ? carts[0]._id : null;
         const user = req.session.user;
         try {
-            const product = await productManagerImport.getProductById(pid);
+            const product = await productService.getProductById(pid);
             res.render("productDetails", {
                 title: product.title,
                 description: product.description,
@@ -60,46 +57,36 @@ export default class productController {
                 category: product.category,
                 id: product._id,
                 cartID,
-                user
+                user,
             });
         } catch (err) {
             if (err.message.includes("Product with id")) {
                 res.status(404).json({ error404: err.message });
             }
         }
-    };
+    }
 
     async getRealTimeProducts(req, res) {
-        const products = await productManagerImport.getProducts();
+        const products = await productService.getProducts();
         const idString = products.products.map((product) => ({
             ...product,
             _id: product._id.toHexString(),
         }));
         const user = req.session.user;
         res.render("realTimeProducts", { products: idString, user });
-    };
+    }
 
     async getForm(req, res) {
         const user = req.session.user;
         res.render("form", { user });
-    };
+    }
 
     async postNewProduct(req, res) {
-        const { title, description, price, thumbnail, category, stock, code } =
-            req.body;
+        const { title, description, price, thumbnail, category, stock, code } = req.body;
 
-        const result = await productManagerImport.addProduct(
-            title,
-            description,
-            price,
-            thumbnail,
-            category,
-            stock,
-            code
-        );
+        const result = await productService.addProduct(title, description, price, thumbnail, category, stock, code);
         res.redirect("/home");
-    };
-
+    }
 }
 
 const productControllerimp = new productController();

@@ -1,4 +1,7 @@
 export default class sessionService{
-    constructor(){
-      
-    }}
+    constructor(userDAO) {
+        this.userDAO = userDAO;
+    }
+
+}
+
