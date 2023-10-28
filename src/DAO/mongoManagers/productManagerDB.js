@@ -1,7 +1,9 @@
 import productModel from "../models/products.model.js";
 
 export default class productManager {
-
+ constructor(){
+  
+ }
 
   addProduct = async (title, description, price, thumbnail, category, stock, code) => {
     try {

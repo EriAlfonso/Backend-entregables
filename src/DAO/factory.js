@@ -1,10 +1,10 @@
 import config from "../config/config.js";
 import mongoose from "mongoose";
 
-export let Products
-export let Carts
-export let View
-export let Ticket
+export let Products;
+export let Carts;
+export let View;
+export let Ticket;
 
 switch (config.PERSISTENCE) {
     case "MEMORY" :
@@ -25,25 +25,26 @@ switch (config.PERSISTENCE) {
         Ticket = TicketFile
         break;
 
-    case "MONGODB" :{
+    case "MONGODB" :
       
-        const {default: ProductsMongo } = await import("./mongoManagers/productManagerDB.js");
+      mongoose.connect(config.MONGO_URL, {
+          dbName: "ecommerce"
+        })
+          .then(() => {
+            console.log("DB connected!!");
+          })
+          .catch (e => {
+            console.log("cant connect to DB", e.message);
+          })
+        const {default: productManager } = await import("./mongoManagers/productManagerDB.js");
         const {default: ViewMongo } = await import("./mongoManagers/viewManagerDB.js");
         const {default: CartsMongo} = await import("./mongoManagers/cartManagerDB.js");
-        const {default: TicketsMongo} = await import("./mongoManagers/ticketManagerDB.js")
-        mongoose.connect(process.env.URL_MONGO, {
-            dbName: "ecommerce"
-          })
-            .then(() => {
-              console.log("DB connected!!");
-            })
-            .catch (e => {
-              console.log("can´t connect to DB", e.message);
-            })
-        Products = ProductsMongo
-        Carts = CartsMongo
-        View = ViewMongo
-        Ticket = TicketsMongo
+        const {default: TicketsMongo} = await import("./mongoManagers/ticketManagerDB.js");
+
+        Products = productManager;
+        Carts = CartsMongo;
+        View = ViewMongo;
+        Ticket = TicketsMongo;
+      
         break;
     }
-}

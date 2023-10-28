@@ -1,12 +1,15 @@
-import productService from "../services/product.service.js";
+import { productRepository } from "../services/index.js";
 
 export default class productController {
+    constructor(){
+        
+    }
     async indexView(req, res) {
         res.render("index", {});
     }
 
     async getProductsHome(req, res) {
-        const products = await productService.getProducts();
+        const products = await productRepository.getProducts();
         const idString = products.products.map((product) => ({
             ...product,
             _id: product._id.toHexString(),
@@ -23,7 +26,7 @@ export default class productController {
         };
         const user = req.session.user;
         try {
-            const result = await productService.getProductsQuery(options);
+            const result = await productRepository.getProductsQuery(options);
             res.render("products", {
                 user,
                 products: result.payload,
@@ -47,7 +50,7 @@ export default class productController {
         const cartID = carts ? carts[0]._id : null;
         const user = req.session.user;
         try {
-            const product = await productService.getProductById(pid);
+            const product = await productRepository.getProductById(pid);
             res.render("productDetails", {
                 title: product.title,
                 description: product.description,
@@ -67,7 +70,7 @@ export default class productController {
     }
 
     async getRealTimeProducts(req, res) {
-        const products = await productService.getProducts();
+        const products = await productRepository.getProducts();
         const idString = products.products.map((product) => ({
             ...product,
             _id: product._id.toHexString(),
@@ -84,7 +87,7 @@ export default class productController {
     async postNewProduct(req, res) {
         const { title, description, price, thumbnail, category, stock, code } = req.body;
 
-        const result = await productService.addProduct(title, description, price, thumbnail, category, stock, code);
+        const result = await productRepository.addProduct(title, description, price, thumbnail, category, stock, code);
         res.redirect("/home");
     }
 }
