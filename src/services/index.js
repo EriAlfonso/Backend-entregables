@@ -4,7 +4,7 @@ import productService from "./product.service.js";
 import sessionService from "./session.service.js";
 
 export const productRepository = new productService(
-    new Products(),
+    new  Products(),
 
   );
 // export const messageRepository = new MessageRepository(new Message());
