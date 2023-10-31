@@ -8,7 +8,6 @@ const router = Router();
 router.post('/login', passport.authenticate('login', '/login'), async (req, res) => {
 if (!req.user)return res.status(400).send ('Invalid User Data')
 const access_token = req.user.access_token; 
-console.log(access_token)
 res.cookie('UserJWTCookie', access_token, {
     maxAge: 60 * 60 * 1000,
     httpOnly: true,

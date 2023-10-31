@@ -17,6 +17,7 @@ export default class sessionController {
     }
 
     getLogout(req, res) {
+        res.clearCookie('UserJWTCookie');
         req.session.destroy((err) => {
             if (err) {
                 console.error("Error destroying session:", err);
