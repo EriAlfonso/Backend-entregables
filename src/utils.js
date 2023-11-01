@@ -2,8 +2,7 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { config } from 'dotenv';
-config()
+import config from './config/config';
 
 
 const __filename = fileURLToPath(import.meta.url)
@@ -16,25 +15,8 @@ export const isValidPassword =(user,password) => {
     return bcrypt.compareSync(password, user.password)
 }
 export const generateToken = (user) => {
-    const token = jwt.sign( {user}, process.env.PRIVATE_KEY, {expiresIn: '24h'})
+    const token = jwt.sign( user, config.PRIVATE_KEY, {expiresIn: '10m'})
     return token
 }
 
-export const authToken = (req, res, next) => {
-    let authHeader = req.headers.auth
-    if(!authHeader) {
-        authHeader=req.cookies['UserJWTCookie']
-        if(!authHeader) {
-            return res.status(401).send({
-                error: 'Not authorized'
-            })
-        }
-    }
-    const token = authHeader
-    jwt.verify(token, process.env.PRIVATE_KEY, (error, credentials) => {
-        if(error) return res.status(403).send({error: 'No access'})
-        req.user = credentials.user
-        next()
-    })
-}
 export default __dirname
