@@ -1,12 +1,14 @@
 import passport from "passport";
 import local from 'passport-local';
+import cartModel from "../DAO/models/carts.model.js";
 import userModel from "../DAO/models/user.model.js";
+import usersManager from "../DAO/mongoManagers/userManagerDB.js";
 import githubStrategy from "passport-github2";
 import { createHash,generateToken,isValidPassword } from "../utils.js";
 import jwt from "passport-jwt";
 import config from "./config.js";
 
-
+const usersManagerImport =new usersManager()
 
 const LocalStrategy = local.Strategy
 const JwtStrategy = jwt.Strategy
@@ -20,7 +22,7 @@ const cookieExtractor = req => {
 
 const initializePassport =() =>{
 
-    
+
     passport.use ('github', new githubStrategy(
         {
             clientID: config.CLIENTID,
@@ -29,17 +31,28 @@ const initializePassport =() =>{
         },
         async(accessToken,refreshToken,profile,done)=>{
             try{
+                const email=profile._json.email
                 const user= await userModel.findOne({email: profile._json.email})
                 if (user){
+                    const access_token = generateToken({user})
+                    user.token=access_token
                     return done(null,user)
                 }
+              
+                const cart = new cartModel()
+                const cartid = cart._id
                 const newUser={
                     first_name:profile._json.name,
-                    email:profile._json.email,
-                    password:''
+                    last_name:'',
+                    age:0,
+                    email: profile._json.email,
+                    cart:cartid,
+                    password:'',
+                    role:'user',
 
                 }
-                const result= await userModel.create(newUser)
+                const result= await userModel.create(newUser);
+                await result.save()
                 return done(null,result)
             }
             catch(error){

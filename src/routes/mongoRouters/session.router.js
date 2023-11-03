@@ -1,5 +1,6 @@
 import { Router } from "express";
 import passport from "passport";
+import { generateToken } from "../../utils.js";
 
 const router = Router();
 
@@ -36,9 +37,15 @@ router.get(
     passport.authenticate('github', { failureRedirect: '/' }),
     async (req, res) => {
         console.log('Callback: ', req.user)
-        req.session.user = req.user
-        console.log(req.session)
-        res.redirect('/products')
+        const user = req.user
+        const access_token = generateToken({user})
+
+        res.cookie("UserJWTCookie", access_token, {
+            maxAge: 60 * 60 * 1000,
+            httpOnly: true,
+        })
+        req.session.user = user
+        return res.redirect('/products')
     }
 )
 

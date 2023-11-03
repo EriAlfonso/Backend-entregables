@@ -1,4 +1,4 @@
-import userModel from "../models/user.model";
+import userModel from "../models/user.model.js";
 export default class usersManager {
     async createUser(data) {
       try {
@@ -35,7 +35,7 @@ export default class usersManager {
     getUserByEmailCode = async (email, verificationCode) => {
       try {
         if ((email, verificationCode)) {
-          const user = await UserModel.findOne({ email, verificationCode });
+          const user = await userModel.findOne({ email, verificationCode });
           return user;
         }
       } catch (e) {
