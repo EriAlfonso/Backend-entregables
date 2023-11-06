@@ -3,7 +3,7 @@ import { getForm, getProductDetail, getProducts, getProductsHome, getRealTimePro
 import { getChat, sendMessage } from "../controllers/chat.controller.js";
 import { getCarts } from "../controllers/cart.controller.js";
 import { getLogin, getLogout, getProfile, getRegister } from "../controllers/session.controller.js";
-import {auth,authenticateToken} from "../middlewares/authentication.js";
+import {auth,authenticateToken,adminAccess,userAccess} from "../middlewares/authentication.js";
 
 const router = Router();
 
@@ -12,12 +12,12 @@ router.get("/", indexView);
 router.get("/home", authenticateToken, getProductsHome);
 router.get("/products", authenticateToken, getProducts);
 router.get("/products/:pid", authenticateToken, getProductDetail);
-router.get("/realTimeProducts", authenticateToken, getRealTimeProducts);
-router.get("/add-products", authenticateToken, getForm);
-router.post("/add-products", authenticateToken, postNewProduct);
+router.get("/realTimeProducts",adminAccess, authenticateToken, getRealTimeProducts);
+router.get("/add-products",adminAccess, authenticateToken, getForm);
+router.post("/add-products",adminAccess, authenticateToken, postNewProduct);
 // chat routers
-router.get("/chat", authenticateToken, getChat);
-router.post("/chat", authenticateToken, sendMessage);
+router.get("/chat", userAccess,authenticateToken, getChat);
+router.post("/chat",userAccess, authenticateToken, sendMessage);
 // cart routers
 router.get("/carts", authenticateToken, getCarts);
 // session routers
