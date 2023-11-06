@@ -3,7 +3,7 @@ import cartModel from "../DAO/models/carts.model.js";
 import productDTO from "../DTO/products.dto.js";
 
 export default class productService {
-    constructor(productDAO, userDAO) {
+    constructor(productDAO) {
         this.productDAO = productDAO;
     }
 

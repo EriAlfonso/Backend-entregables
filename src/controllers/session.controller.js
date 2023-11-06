@@ -1,33 +1,31 @@
-
+import { sessionRepository } from "../services/index.js";
 
 export default class sessionController {
     getLogin(req, res) {
-        if (req.session?.user) {
-            res.redirect('/logout')
-        }
-        else
+        if (sessionRepository.isUserLoggedIn(req)) {
+            sessionRepository.loginRedirect(res);
+        } else {
             res.render("login", {});
+        }
     }
 
     getRegister(req, res) {
-        if (req.session?.user) {
-            res.redirect('/profile')
+        if (sessionRepository.isUserLoggedIn(req)) {
+            sessionRepository.registerRedirect(res);
+        } else {
+            res.render("register", {});
         }
-        res.render("register", {});
     }
 
     getLogout(req, res) {
-        res.clearCookie('UserJWTCookie');
-        req.session.destroy((err) => {
-            if (err) {
-                console.error("Error destroying session:", err);
-            }
+        sessionRepository.clearSessionCookie(res);
+        sessionRepository.destroySession(req, res, () => {
             res.redirect('/products');
         });
     }
 
     getProfile(req, res) {
-        const user = req.session.user
+        const user = req.session.user;
         res.render("profile", user);
     }
 }

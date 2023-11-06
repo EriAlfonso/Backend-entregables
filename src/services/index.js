@@ -5,8 +5,9 @@ import sessionService from "./session.service.js";
 
 export const productRepository = new productService(
     new  Products(),
-
   );
+export const sessionRepository= new sessionService(
+)
 // export const messageRepository = new MessageRepository(new Message());
 //   // user, message,ticket
 // export const cartRepository = new cartService(

@@ -1,6 +1,6 @@
 import cartModel from "../models/carts.model.js";
 
-export default class CartManager {
+export default class cartManager {
   createCart = async () => {
     try {
       const cart = {

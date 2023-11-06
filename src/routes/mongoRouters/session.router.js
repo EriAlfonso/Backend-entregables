@@ -36,7 +36,6 @@ router.get(
     '/githubcallback',
     passport.authenticate('github', { failureRedirect: '/' }),
     async (req, res) => {
-        console.log('Callback: ', req.user)
         const user = req.user
         const access_token = generateToken({user})
 
