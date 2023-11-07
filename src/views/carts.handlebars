@@ -12,7 +12,7 @@
     </thead>
     <tbody id="realTimeCart">
         {{#each products}}
-        <tr>
+        <tr id="product_{{_id._id}}">
         <td><img src="{{_id.thumbnail}}" style="width: 5rem;" alt="no image"></td>
             <td>{{_id.title}}</td>
             <td>{{quantity}}</td>
@@ -25,6 +25,7 @@
         {{/each}}
     </tbody>
 </table>
+<button id="purchase-btn" class="btn btn-primary">Purchase</button>
 <table id="cartContentTable" class="table table-hover">
     <thead>
         <tr>

@@ -1,6 +1,6 @@
 import cartManager from "../DAO/mongoManagers/cartManagerDB.js";
 import cartModel from "../DAO/models/carts.model.js";
-import cartService from "../services/cart.service.js";
+import { cartRepository } from "../services/index.js";
 const cartManagerImport = new cartManager();
 
 export default class cartController {
@@ -21,7 +21,16 @@ export default class cartController {
             res.status(500).json({ error: "Internal Server Error" });
         }
     }
+    async cartPurchase (req, res)  {
+        try {
+            await cartRepository.cartPurchase(req.params.cid);
+            res.status(200).json({ message: 'Purchase completed successfully' });
+        } catch (error) {
+            console.error('Purchase error:', error);
+            res.status(500).json({ error: 'Internal Server Error' });
+        }
+    };
 }
 const cartControllerimp = new cartController();
-const { getCarts } = cartControllerimp;
-export { getCarts }
+const { getCarts,cartPurchase } = cartControllerimp;
+export { getCarts,cartPurchase }

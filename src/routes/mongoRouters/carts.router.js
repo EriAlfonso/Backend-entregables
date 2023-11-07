@@ -2,6 +2,7 @@ import { Router } from "express";
 import cartManager from "../../DAO/mongoManagers/cartManagerDB.js";
 import productManager from "../../DAO/mongoManagers/productManagerDB.js";
 import mongoose from "mongoose";
+import { cartPurchase } from "../../controllers/cart.controller.js";
 
 const router = Router();
 
@@ -20,6 +21,8 @@ router.get("/:cid", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
+router.post('/:cid/purchase', cartPurchase);
 
 router.post("/", async (req, res) => {
   try {
@@ -115,8 +118,10 @@ router.put("/:cid/product/:pid", async (req, res) => {
     const { cid, pid } = req.params;
     try {
       await cartManagerImport.removeProductFromCart(cid, pid);
-  
-      res.status(200).json({ message: "Product removed from cart" });
+      const updatedCart = await cartManagerImport.getCartByIdAndPopulate(cid);
+    const updatedCartItemCount = updatedCart.products.reduce((total, product) => total + product.quantity, 0);
+
+      res.status(200).json({ message: "Product removed from cart",cartItemCount: updatedCartItemCount });
     } catch (err) {
       if (err.message.includes("Product not found in cart")) {
         res.status(404).json({ error: err.message });

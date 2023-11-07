@@ -1,6 +1,7 @@
 const socket = io()
 
 const deleteButtons = document.querySelectorAll(".delete-btn");
+const cartItemCount = document.getElementById("cartItemCount");
 
 deleteButtons.forEach(button => {
     button.addEventListener("click", async () => {
@@ -11,6 +12,13 @@ deleteButtons.forEach(button => {
                 method: "DELETE",
             });
             if (response.ok) {
+                const productRow = document.getElementById(`product_${productID}`);
+                if (productRow) {
+                    productRow.remove();
+                }
+                const data = await response.json(); 
+                const updatedItemCount = data.cartItemCount; 
+                cartItemCount.textContent = updatedItemCount;
                 console.log("Product removed from cart");
             } else {
                 console.error("Failed to remove product from cart");
@@ -18,6 +26,22 @@ deleteButtons.forEach(button => {
         } catch (error) {
             console.error("An error occurred:", error);
         }
+    });
+});
+
+document.getElementById('purchase-btn').addEventListener('click', function () {
+    fetch('/carts/:cid/purchase', {
+        method: 'POST',
+    })
+    .then(response => {
+        if (response.ok) {
+        } 
+        else {
+            console.error("Purchase Error: Can't complete purchase ");
+        }
+    })
+    .catch(error => {
+        console.error("An error occurred:", error);
     });
 });
 

@@ -33,6 +33,10 @@ deleteButtons.forEach(button => {
                 method: "DELETE",
             });
             if (response.ok) {
+                const productRow = document.getElementById(`product_${productID}`);
+                if (productRow) {
+                    productRow.remove();
+                }
                 console.log("Product removed");
             } else {
                 console.error("Failed to remove product ");
