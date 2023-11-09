@@ -15,8 +15,7 @@ export const isValidPassword =(user,password) => {
     return bcrypt.compareSync(password, user.password)
 }
 export const generateToken = (user) => {
-    console.log(user)
-    const token = jwt.sign( user, config.PRIVATE_KEY, {expiresIn: '10m'})
+    const token = jwt.sign( user, config.PRIVATE_KEY, {expiresIn: '30m'})
     return token
 }
 

@@ -27,11 +27,9 @@ export default class cartManager {
   getCartById = async (id) => {
     try {
       const cart = await cartModel.findById(id);
-
       if (cart === null) {
         throw new Error(`Cart with id: ${id} does not exist`);
       }
-
       return cart;
     } catch (err) {
       throw err;

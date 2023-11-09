@@ -25,17 +25,20 @@
         {{/each}}
     </tbody>
 </table>
-<button id="purchase-btn" class="btn btn-primary">Purchase</button>
+
 <table id="cartContentTable" class="table table-hover">
     <thead>
         <tr>
             <th>Cart Total</th>
         </tr>
-
     </thead>
     <tbody>
         <tr>
             <td>${{cartTotalPrice}}</td>
+            
+        </tr>
+        <tr>
+<td><button id="purchase-btn" class="btn btn-primary" data-cartid="{{cartId}}">Purchase</button></td>
         </tr>
     </tbody>
 </table>

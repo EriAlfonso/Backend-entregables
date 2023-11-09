@@ -13,7 +13,7 @@ import chatRouter from "./routes/mongoRouters/chat.router.js"
 import sessionRouter from "./routes/mongoRouters/session.router.js"
 import productManager from "./DAO/mongoManagers/productManagerDB.js";
 import cartManager from "./DAO/mongoManagers/cartManagerDB.js";
-import cartModel from "./DAO/models/carts.model.js";
+import userModel from "./DAO/models/user.model.js";
 import chatManager from "./DAO/mongoManagers/chatManagerDB.js";
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
@@ -61,26 +61,30 @@ initializePassport()
 app.use(passport.initialize())
 app.use(passport.session())
 
-// codigo para el badge 
+// rework this code to use the badge more efficiently. 
 app.use(async (req, res, next) => {
   if (req.session?.user) {
-    const carts = await cartModel.find();
-    const cartID = carts ? carts[0]._id : null;
-
+    
     try {
-      const cart = await cartManagerImport.getCartByIdAndPopulate(cartID);
-      const cartItemCount = cart.products.reduce((total, product) => total + product.quantity, 0);
-      res.locals.cartItemCount = cartItemCount;
-    } catch (error) {
-      console.error("Error fetching cart:", error);
+      const cartID = await userModel
+        .findOne({ _id: req.session.user._id })
+        .populate("cart");
+        if (cartID && cartID.cart && cartID.cart.products) {
+          const cartItemCount = cartID.cart.products.reduce((total, product) => total + product.quantity, 0);
+          res.locals.cartItemCount = cartItemCount;
+        } else {
+          res.locals.cartItemCount = 0;
+        }
+      } catch (error) {
+        console.error("Error fetching cart:", error);
+        res.locals.cartItemCount = 0;
+      }
+    } else {
       res.locals.cartItemCount = 0;
     }
-  } else {
-    res.locals.cartItemCount = 0;
-  }
-
-  next();
-});
+  
+    next();
+  });
 // import de routers
 app.use("/", viewsRouter);
 app.use("/api/carts", cartRouter);

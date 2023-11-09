@@ -1,9 +1,10 @@
 import { productRepository } from "../services/index.js";
 import cartModel from "../DAO/models/carts.model.js";
+import userModel from "../DAO/models/user.model.js";
 
 export default class productController {
-    constructor(){
-        
+    constructor() {
+
     }
     async indexView(req, res) {
         res.render("index", {});
@@ -46,11 +47,20 @@ export default class productController {
     }
 
     async getProductDetail(req, res) {
-        let { pid } = req.params;
-        const carts = await cartModel.find();
-        const cartID = carts ? carts[0]._id : null;
+        const { pid } = req.params;
         const user = req.session.user;
         try {
+            const userWithCart = await userModel
+                .findOne({ _id: user._id })
+                .populate("cart")
+                .exec();
+            if (!userWithCart || !userWithCart.cart) {
+                const cart = new cartModel();
+                const savedCart = await cart.save();
+                
+                userWithCart.cart = savedCart._id;
+                await userWithCart.save();
+            }
             const product = await productRepository.getProductById(pid);
             res.render("productDetails", {
                 title: product.title,
@@ -60,12 +70,15 @@ export default class productController {
                 stock: product.stock,
                 category: product.category,
                 id: product._id,
-                cartID,
+                cartID: userWithCart.cart._id.toString(),
                 user,
             });
         } catch (err) {
             if (err.message.includes("Product with id")) {
                 res.status(404).json({ error404: err.message });
+            } else {
+                console.error("Error fetching product details:", err);
+                res.status(500).json({ error: "Internal Server Error" });
             }
         }
     }

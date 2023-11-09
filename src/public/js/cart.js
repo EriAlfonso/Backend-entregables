@@ -29,17 +29,24 @@ deleteButtons.forEach(button => {
     });
 });
 
+// make cart id bring the actual id. the rest should function
 document.getElementById('purchase-btn').addEventListener('click', function () {
-    fetch('/carts/:cid/purchase', {
+    const cartId = this.dataset.cartid;
+    fetch(`/carts/${cartId}/purchase`, {
         method: 'POST',
     })
     .then(response => {
         if (response.ok) {
+            return response.json();
         } 
         else {
             console.error("Purchase Error: Can't complete purchase ");
         }
     })
+        .then(data => {
+            const confirmationMessage = `Purchase completed successfully!\nTicket Code: ${data.ticket.code}\nTotal Price: ${data.ticket.amount}`;
+            alert(confirmationMessage);
+        })
     .catch(error => {
         console.error("An error occurred:", error);
     });

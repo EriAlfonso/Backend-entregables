@@ -24,5 +24,7 @@ export default class cartService{
     const ticket = new TicketModel({
       cart: cart._id,
       products: cart.products,
-  })
+  });
+  await ticket.save()
+    return ticket;
 }}
