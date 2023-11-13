@@ -21,31 +21,28 @@ async getCarts(req, res) {
             product.cartId = cartID.toString()
         });
         const cartTotalPrice = cart.products.reduce((total, product) => total + product.totalPrice, 0);
-        res.render("carts", { products: cart.products, cartTotalPrice, user, });
+        res.render("carts", { products: cart.products, cartTotalPrice, user, cartID });
     } catch (error) {
         console.error("Error fetching cart:", error);
         res.status(500).json({ error: "Internal Server Error" });
     }
 }
 
-    async cartPurchase(req, res) {
-        const cartId = req.params.cid;
-        try {
-            const ticket = await cartRepository.cartPurchase(cartId);
-            const newTicket = new ticketsModel({
-                code: ticket.code, 
-                purchase_datetime: new Date().toString(),
-                amount: ticket.totalPrice,
-                purchaser: req.session.user.username, 
-            });
-            await newTicket.save();
-            const newCart = await cartRepository.createCartForUser(req.session.user);
-            res.status(200).json({ message: "Purchase completed successfully", ticket });
-        } catch (error) {
-            console.error("Purchase error:", error);
-            res.status(500).json({ error: "Internal Server Error" });
-        }
-    };
+async cartPurchase(req, res) {
+  const cartId = req.params.cid;
+  const user = req.session.user.email;
+  try {
+    const ticket = await cartRepository.cartTicket(cartId, user);
+    // const newCart = await cartRepository.createCartForUser(req.session.user);
+    console.log("ticket:",ticket)
+    res.status(200).json({ message: 'Purchase completed successfully', ticket });
+  } catch (error) {
+    console.error('Purchase error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
+  
+
 }
 const cartControllerimp = new cartController();
 const { getCarts, cartPurchase } = cartControllerimp;

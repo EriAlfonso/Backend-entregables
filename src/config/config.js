@@ -8,5 +8,6 @@ export default {
     CLIENTID: process.env.CLIENTID,
     CLIENTSECRET: process.env.CLIENTSECRET,
     MONGO_SECRET: process.env.MONGO_SECRET,
+    MONGO_NAME:process.env.MONGO_NAME,
     CALLBACKURL :process.env.CALLBACKURL,
 }

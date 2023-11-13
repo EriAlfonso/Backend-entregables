@@ -28,7 +28,7 @@ switch (config.PERSISTENCE) {
     case "MONGODB" :
       
       mongoose.connect(config.MONGO_URL, {
-          dbName: "ecommerce"
+          dbName: config.MONGO_NAME
         })
           .then(() => {
             console.log("DB connected!!");
@@ -37,13 +37,13 @@ switch (config.PERSISTENCE) {
             console.log("cant connect to DB", e.message);
           })
         const {default: productManager } = await import("./mongoManagers/productManagerDB.js");
-        const {default: ViewMongo } = await import("./mongoManagers/viewManagerDB.js");
+        const {default: viewManager } = await import("./mongoManagers/viewManagerDB.js");
         const {default: cartManager} = await import("./mongoManagers/cartManagerDB.js");
         const {default: ticketManager} = await import("./mongoManagers/ticketsManagerDB.js")
 
         Products = productManager;
         Carts = cartManager;
-        View = ViewMongo;
+        View = viewManager;
         Ticket = ticketManager;
       
         break;

@@ -29,8 +29,22 @@ export default class ticketManager {
             if ((id, data)) {
                 return await ticketModel.findByIdAndUpdate(id, data);
             }
-        } catch (e) {
-            throw e;
+        } catch (error) {
+            throw error;
         }
+    }
+
+    createTicket = async (ticket) => {
+        const tickets = await this.getTickets();
+        const newCode = tickets.length
+        const nextCode = newCode? newCode + 1 : 1
+        const purchase_datetime = new Date().toString()
+        try {
+            const newTickets = await ticketModel({...ticket, code : nextCode, purchase_datetime: purchase_datetime});
+            newTickets.save();
+            return {success: true, message: "Ticket Created Successfully"}
+        } catch (error) {
+            console.error('Error during Ticket Creation:', error);
+    throw error;}
     }
 }

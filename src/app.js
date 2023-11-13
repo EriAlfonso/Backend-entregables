@@ -29,8 +29,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser('JWTCookieKey'))
 
-const mongoUrl= config.MONGO_URL
-
 // set de static
 app.use(express.static("./src/public"));
 
@@ -42,8 +40,8 @@ app.set("view engine", "handlebars");
 
 app.use(session({
   store: MongoStore.create({
-    mongoUrl: mongoUrl,
-    dbName: "ecommerce",
+    mongoUrl: config.MONGO_URL,
+    dbName: config.MONGO_NAME,
     mongoOptions: {
       useNewUrlParser: true,
       useUnifiedTopology: true,
@@ -96,8 +94,8 @@ app.use("/api/session", sessionRouter)
 const httpServer = app.listen(8080, () => console.log("Server is Running.."));
 
 // conneccion a mongo 
-mongoose.connect(mongoUrl, {
-  dbName: "ecommerce",
+mongoose.connect(config.MONGO_URL, {
+  dbName: config.MONGO_NAME,
 })
   .then(() => {
     console.log("DB connected");

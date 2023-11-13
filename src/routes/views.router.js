@@ -1,9 +1,10 @@
 import { Router } from "express";
 import { getForm, getProductDetail, getProducts, getProductsHome, getRealTimeProducts, indexView, postNewProduct } from "../controllers/product.controller.js";
 import { getChat, sendMessage } from "../controllers/chat.controller.js";
-import { getCarts, cartPurchase  } from "../controllers/cart.controller.js";
+import { cartPurchase, getCarts } from "../controllers/cart.controller.js";
 import { getLogin, getLogout, getProfile, getRegister } from "../controllers/session.controller.js";
 import {auth,authenticateToken,adminAccess,userAccess} from "../middlewares/authentication.js";
+import { createTicket } from "../controllers/ticket.controller.js";
 
 const router = Router();
 

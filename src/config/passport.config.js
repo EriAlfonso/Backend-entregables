@@ -2,13 +2,10 @@ import passport from "passport";
 import local from 'passport-local';
 import cartModel from "../DAO/models/carts.model.js";
 import userModel from "../DAO/models/user.model.js";
-import usersManager from "../DAO/mongoManagers/userManagerDB.js";
 import githubStrategy from "passport-github2";
 import { createHash,generateToken,isValidPassword } from "../utils.js";
 import jwt from "passport-jwt";
 import config from "./config.js";
-
-const usersManagerImport =new usersManager()
 
 const LocalStrategy = local.Strategy
 const JwtStrategy = jwt.Strategy
