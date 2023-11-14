@@ -1,6 +1,7 @@
 import { productRepository } from "../services/index.js";
 import cartModel from "../DAO/models/carts.model.js";
 import userModel from "../DAO/models/user.model.js";
+import { faker } from "@faker-js/faker";
 
 export default class productController {
     constructor() {
@@ -104,10 +105,43 @@ export default class productController {
         const result = await productRepository.addProduct(title, description, price, thumbnail, category, stock, code);
         res.redirect("/home");
     }
+    async mockingProducts(req, res) {
+        try {
+            const products = [];
+    
+      for (let i = 0; i < 100; i++) {
+        const productName = faker.commerce.productName();
+        const productPrice = faker.commerce.price();
+        const productCategory = faker.lorem.word();
+        const productImage = faker.image.url();
+    
+        const product = {
+          title: productName,
+          price: productPrice,
+          category: productCategory,
+          thumbnail: productImage,
+        };
+    
+        products.push(product);
+      }
+            if (!products) {
+                return CustomError.createError({
+                    name: "get products  error",
+                    cause: ErrorGetProducts(),
+                    message: "Product not found",
+                    code: EErrors.NOT_FOUND_ERROR
+                  })
+            }
+            res.render("mocking",  {products})
+        } catch (error) {
+            logger.error('An error occurred ' + error.message)
+            return {success: false, message: "Product not found"}
+        }
+      }
 }
 
 const productControllerimp = new productController();
-const { getProducts, getProductsHome, postNewProduct, getForm, getRealTimeProducts, getProductDetail, indexView } = productControllerimp;
+const { getProducts, getProductsHome, postNewProduct, getForm, getRealTimeProducts, getProductDetail, indexView, mockingProducts } = productControllerimp;
 export {
-    getForm, getProductDetail, getProductsHome, getRealTimeProducts, postNewProduct, getProducts, indexView
+    getForm, getProductDetail, getProductsHome, getRealTimeProducts, postNewProduct, getProducts, indexView,mockingProducts
 }

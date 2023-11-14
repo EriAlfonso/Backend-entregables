@@ -131,6 +131,4 @@ export default class productManager {
     }
   };
 
-
-
 }
