@@ -31,10 +31,11 @@ async getCarts(req, res) {
 async cartPurchase(req, res) {
   const cartId = req.params.cid;
   const user = req.session.user.email;
+  const userid=  req.session.user
+
   try {
     const { remainingProducts, ticket } = await cartRepository.cartPurchase(cartId, user);
-    const newCart = await cartRepository.createCartForUser(req.session.user,remainingProducts);
-    console.log("ticket:",ticket)
+    const newCart = await cartRepository.createCartForUser(userid,remainingProducts);
     res.status(200).json({ message: 'Purchase completed successfully', ticket , newCart});
   } catch (error) {
     console.error('Purchase error:', error);

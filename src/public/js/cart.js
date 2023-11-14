@@ -48,6 +48,7 @@ document.getElementById('purchase-btn').addEventListener('click', function () {
         .then(data => {
             const confirmationMessage = `Purchase completed successfully!\nTicket Code: ${data.ticket.code}\nTotal Price: ${data.ticket.amount}`;
             alert(confirmationMessage);
+            window.location.reload();
         })
     .catch(error => {
         console.error("An error occurred:", error);

@@ -1,4 +1,5 @@
 import cartModel from "../DAO/models/carts.model.js";
+import userModel from "../DAO/models/user.model.js";
 import cartsDTO from "../DTO/carts.dto.js";
 import mongoose from "mongoose";
 import { productRepository,ticketRepository} from "./index.js";
@@ -34,18 +35,15 @@ async cartPurchase(cartId, user) {
       }
       const desiredQuantity = cartItem.quantity;
       
-      if (product.stock >= desiredQuantity) {
-        product.stock -= desiredQuantity;
-        await product.save();
+      if (product.stock < desiredQuantity) {
         remainingProducts.push(cartItem);
       } else {
-        console.log(`Product ${product.title} has insufficient stock.`);
+        product.stock -= desiredQuantity;
+        await product.save();
       }
-      }
+    }
     const createdTicket = await ticketRepository.createTicket(cart, user );
-    const newCart = await this.createCartForUser(user, remainingProducts);
-    
-    return { ticket: createdTicket, newCart };
+    return { ticket: createdTicket,remainingProducts };
   } catch (error) {
     console.error('Error during cart purchase:', error);
     throw error;
@@ -54,13 +52,30 @@ async cartPurchase(cartId, user) {
 
 async createCartForUser(user,remainingProducts) {
   try {
+    const userWithCart = await userModel.findById(user._id).populate('cart');
+    
+    if (!userWithCart) {
+      throw new Error('User not found');
+    }
+
+    const previousCart = userWithCart.cart;
+
+    if (previousCart) {
+      await cartModel.findByIdAndDelete(previousCart._id);
+    }
+
     const newCart = new cartModel({
       user: user._id,
     });
-    newCart.products = remainingProducts.map(cartItem => ({
-      _id: cartItem._id,
-      quantity: cartItem.quantity,
-    }));
+
+    if (remainingProducts && Array.isArray(remainingProducts)) {
+      newCart.products = remainingProducts.map(cartItem => ({
+        _id: cartItem._id,
+        quantity: cartItem.quantity,
+      }));
+    } else {
+      console.log('No remaining products to add to the new cart.');
+    }
 
     await newCart.save();
 
