@@ -6,6 +6,7 @@ import { Server } from "socket.io";
 import handlebars from "express-handlebars";
 import session from "express-session";
 import cookieParser from "cookie-parser";
+import errorHandler from "./middlewares/error.js";
 import cartRouter from "./routes/mongoRouters/carts.router.js";
 import productRouter from "./routes/mongoRouters/products.router.js";
 import viewsRouter from "./routes/views.router.js";
@@ -89,6 +90,7 @@ app.use("/api/carts", cartRouter);
 app.use("/api/products", productRouter);
 app.use("/api/chat", chatRouter)
 app.use("/api/session", sessionRouter)
+app.use(errorHandler)
 
 // port 
 const httpServer = app.listen(8080, () => console.log("Server is Running.."));

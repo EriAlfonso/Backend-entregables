@@ -2,6 +2,9 @@ import { productRepository } from "../services/index.js";
 import cartModel from "../DAO/models/carts.model.js";
 import userModel from "../DAO/models/user.model.js";
 import { faker } from "@faker-js/faker";
+import EErrors from "../services/errors/enums.js";
+import CustomError from "../services/errors/custom_errors.js";
+import { ErrorGetProducts } from "../services/errors/info.js";
 
 export default class productController {
     constructor() {
@@ -126,10 +129,10 @@ export default class productController {
       }
             if (!products) {
                 return CustomError.createError({
-                    name: "get products  error",
+                    name: "error getting products",
                     cause: ErrorGetProducts(),
                     message: "Product not found",
-                    code: EErrors.NOT_FOUND_ERROR
+                    code: EErrors.PRODUCT_NOT_FOUND
                   })
             }
             res.render("mocking",  {products})
