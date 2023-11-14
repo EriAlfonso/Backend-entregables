@@ -1,51 +1,73 @@
 import cartModel from "../DAO/models/carts.model.js";
-import ticketModel from "../DAO/models/ticket.model.js";
 import cartsDTO from "../DTO/carts.dto.js";
-import cartManager from "../DAO/mongoManagers/cartManagerDB.js";
+import mongoose from "mongoose";
+import { productRepository,ticketRepository} from "./index.js";
+
+
 export default class cartService{
-  constructor(cartDAO){
+  constructor(cartDAO,ticketDAO,productDAO){
     this.cartDAO=cartDAO
+    this.ticketDAO=ticketDAO
+    this.productDAO=productDAO
 
   }
-  async cartTicket(cartId, user) {
-    try {
-      const cart = await cartModel.findById(cartId).populate('products._id');
-  
-      if (!cart) {
-        throw new Error('Cart not found');
-      }
-  
-      for (const cartItem of cart.products) {
-        const product = cartItem._id;
-        const desiredQuantity = cartItem.quantity;
-  
-        if (product.stock >= desiredQuantity) {
-          product.stock -= desiredQuantity;
-          await product.save();
-        } else {
-          cartItem.quantity = product.stock;
-        }
-      }
-      
-      const cartTotalPrice = cart.products.reduce((total, product) => total + product.totalPrice, 0);
-      console.log(cartTotalPrice)
-      const tickets = await ticketModel.find();
-      const nextCode = tickets.length + 1;
-  
-      const ticket = new ticketModel({
-        cart: cart._id,
-        purchase_datetime: new Date().toString(),
-        products: cart.products,
-        purchaser: user,
-        amount: cartTotalPrice,
-        code: nextCode,
-      });
-  
-      await ticket.save();
-      return ticket;
-    } catch (error) {
-      console.error('Error during cart purchase:', error);
-      throw error;
+
+  async getCartByIdAndPopulate(id) {
+    return this.cartDAO.getCartByIdAndPopulate(id);
+}
+
+
+async cartPurchase(cartId, user) {
+  try {
+    const cart = await this.getCartByIdAndPopulate(cartId);
+    if (!cart) {
+      throw new Error('Cart not found');
     }
+    const remainingProducts = [];
+    
+    for (const cartItem of cart.products) {
+      const productId = cartItem._id;
+      const product = await productRepository.getProductById(productId);
+
+      if (!product) {
+        throw new Error(`Product not found for ID: ${productId}`);
+      }
+      const desiredQuantity = cartItem.quantity;
+      
+      if (product.stock >= desiredQuantity) {
+        product.stock -= desiredQuantity;
+        await product.save();
+        remainingProducts.push(cartItem);
+      } else {
+        console.log(`Product ${product.title} has insufficient stock.`);
+      }
+      }
+    const createdTicket = await ticketRepository.createTicket(cart, user );
+    const newCart = await this.createCartForUser(user, remainingProducts);
+    
+    return { ticket: createdTicket, newCart };
+  } catch (error) {
+    console.error('Error during cart purchase:', error);
+    throw error;
   }
+}
+
+async createCartForUser(user,remainingProducts) {
+  try {
+    const newCart = new cartModel({
+      user: user._id,
+    });
+    newCart.products = remainingProducts.map(cartItem => ({
+      _id: cartItem._id,
+      quantity: cartItem.quantity,
+    }));
+
+    await newCart.save();
+
+    return newCart;
+  } catch (error) {
+    console.error('Error creating new cart:', error);
+    throw error;
+  }
+}
 }

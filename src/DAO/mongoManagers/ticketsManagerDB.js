@@ -34,17 +34,30 @@ export default class ticketManager {
         }
     }
 
-    createTicket = async (ticket) => {
-        const tickets = await this.getTickets();
-        const newCode = tickets.length
-        const nextCode = newCode? newCode + 1 : 1
-        const purchase_datetime = new Date().toString()
+    async createTicket(cart, user) {
+    
         try {
-            const newTickets = await ticketModel({...ticket, code : nextCode, purchase_datetime: purchase_datetime});
-            newTickets.save();
-            return {success: true, message: "Ticket Created Successfully"}
+            cart.products.forEach(product => {
+                product.totalPrice = product.quantity * product._id.price;
+            });
+            const cartTotalPrice = cart.products.reduce((total, product) => total + product.totalPrice, 0);
+            const tickets = await ticketModel.find();
+            const nextCode = tickets.length + 1;
+
+            const ticket = new ticketModel({
+                cart: cart._id,
+                purchase_datetime: new Date().toString(),
+                products: cart.products,
+                purchaser: user,
+                amount: cartTotalPrice,
+                code: nextCode,
+            });
+
+            await ticket.save();
+            return ticket;
         } catch (error) {
-            console.error('Error during Ticket Creation:', error);
-    throw error;}
+            console.error('Error during ticket creation:', error);
+            throw error;
+        }
     }
 }

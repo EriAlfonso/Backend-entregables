@@ -3,7 +3,7 @@ export default class ticketService {
         this.dao = dao;
     }
 
-    createTicket = async(ticket) => {
-        return await this.dao.createTicket(ticket)
+    createTicket = async(cart,user) => {
+        return await this.dao.createTicket(cart,user)
     }
 }

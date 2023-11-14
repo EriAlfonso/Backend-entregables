@@ -41,7 +41,6 @@ export default class cartManager {
       const cart =
         await cartModel.findById(id)
       .populate("products._id").lean().exec();
-
       if (cart === null) {
         throw new Error(`Cart with id: ${id} does not exist`);
       }
