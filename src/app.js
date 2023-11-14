@@ -23,17 +23,17 @@ import config from "./config/config.js";
 const productManagerImport = new productManager();
 const cartManagerImport = new cartManager();
 const chatManagerImport = new chatManager();
-// import de express
+// import express
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser('JWTCookieKey'))
 
-// set de static
+// set static
 app.use(express.static("./src/public"));
 
 
-// set de handlebars
+// set handlebars
 app.engine(`handlebars`, handlebars.engine());
 app.set("views", __dirname + "/views");
 app.set("view engine", "handlebars");
@@ -83,17 +83,17 @@ app.use(async (req, res, next) => {
   
     next();
   });
-// import de routers
+// import  routers
 app.use("/", viewsRouter);
 app.use("/api/carts", cartRouter);
 app.use("/api/products", productRouter);
 app.use("/api/chat", chatRouter)
 app.use("/api/session", sessionRouter)
 
-// port con mensaje para validar que funcione
+// port 
 const httpServer = app.listen(8080, () => console.log("Server is Running.."));
 
-// conneccion a mongo 
+// mongo 
 mongoose.connect(config.MONGO_URL, {
   dbName: config.MONGO_NAME,
 })
@@ -104,7 +104,7 @@ mongoose.connect(config.MONGO_URL, {
     console.error(error);
   });
 
-// server con io
+// server io
 const io = new Server(httpServer);
 
 io.on("connection", (socket) => {

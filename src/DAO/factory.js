@@ -37,7 +37,6 @@ switch (config.PERSISTENCE) {
             console.log("cant connect to DB", e.message);
           })
         const {default: productManager } = await import("./mongoManagers/productManagerDB.js");
-        const {default: viewManager } = await import("./mongoManagers/viewManagerDB.js");
         const {default: cartManager} = await import("./mongoManagers/cartManagerDB.js");
         const {default: ticketManager} = await import("./mongoManagers/ticketsManagerDB.js")
 
