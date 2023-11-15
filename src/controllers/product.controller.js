@@ -3,7 +3,6 @@ import cartModel from "../DAO/models/carts.model.js";
 import userModel from "../DAO/models/user.model.js";
 import { faker } from "@faker-js/faker";
 import EErrors from "../services/errors/enums.js";
-import CustomError from "../services/errors/custom_errors.js";
 import { ErrorGetProducts } from "../services/errors/info.js";
 
 export default class productController {
@@ -128,12 +127,12 @@ export default class productController {
         products.push(product);
       }
             if (!products) {
-                return CustomError.createError({
-                    name: "error getting products",
-                    cause: ErrorGetProducts(),
-                    message: "Product not found",
-                    code: EErrors.PRODUCT_NOT_FOUND
-                  })
+                const error =new Error();
+                    error.name= "error getting products",
+                    error.cause= ErrorGetProducts(),
+                    error.message= "Product not found",
+                    error.code= EErrors.PRODUCT_NOT_FOUND
+                    return next(error);
             }
             res.render("mocking",  {products})
         } catch (error) {

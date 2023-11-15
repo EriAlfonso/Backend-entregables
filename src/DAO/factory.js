@@ -39,10 +39,8 @@ switch (config.PERSISTENCE) {
         const {default: productManager } = await import("./mongoManagers/productManagerDB.js");
         const {default: cartManager} = await import("./mongoManagers/cartManagerDB.js");
         const {default: ticketManager} = await import("./mongoManagers/ticketsManagerDB.js")
-
         Products = productManager;
         Carts = cartManager;
-        View = viewManager;
         Ticket = ticketManager;
       
         break;

@@ -1,5 +1,6 @@
 import cartModel from "../DAO/models/carts.model.js";
 import userModel from "../DAO/models/user.model.js";
+import EErrors from "./errors/enums.js";
 import cartsDTO from "../DTO/carts.dto.js";
 import mongoose from "mongoose";
 import { productRepository,ticketRepository} from "./index.js";
@@ -22,7 +23,12 @@ async cartPurchase(cartId, user) {
   try {
     const cart = await this.getCartByIdAndPopulate(cartId);
     if (!cart) {
-      throw new Error('Cart not found');
+      const error =new Error();
+                    error.name= "error getting carts",
+                    error.cause= CartError(),
+                    error.message= "Carts not found",
+                    error.code= EErrors.CART_NOT_FOUND
+                    return next(error);
     }
     const remainingProducts = [];
     
@@ -31,7 +37,12 @@ async cartPurchase(cartId, user) {
       const product = await productRepository.getProductById(productId);
 
       if (!product) {
-        throw new Error(`Product not found for ID: ${productId}`);
+        const error =new Error();
+                    error.name= "error getting products",
+                    error.cause= ErrorGetProducts(productId),
+                    error.message= "Product not found",
+                    error.code= EErrors.PRODUCT_NOT_FOUND
+                    return next(error);
       }
       const desiredQuantity = cartItem.quantity;
       
