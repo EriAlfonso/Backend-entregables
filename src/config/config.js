@@ -10,4 +10,5 @@ export default {
     MONGO_SECRET: process.env.MONGO_SECRET,
     MONGO_NAME:process.env.MONGO_NAME,
     CALLBACKURL :process.env.CALLBACKURL,
+    NODE_ENV: process.env.NODE_ENV
 }

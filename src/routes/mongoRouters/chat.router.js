@@ -1,9 +1,10 @@
 import { Router } from "express"
 import chatManager from "../../DAO/mongoManagers/chatManagerDB.js"
+import { authenticateToken,userAccess } from "../../middlewares/authentication.js";
 
 const router = Router();
 const chatManagerImport = new chatManager()
-router.get("/", async (req, res) => {
+router.get("/",authenticateToken,userAccess, async (req, res) => {
   try {
     const messages = await chatManagerImport.getMessages();
     if (req.accepts("json")) {
@@ -17,7 +18,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/",authenticateToken,userAccess, async (req, res) => {
   const { user, message } = req.body;
   if (!user || !message) {
     return res.status(400).json({ error: "Both user and message are required" });

@@ -13,16 +13,15 @@ import viewsRouter from "./routes/views.router.js";
 import chatRouter from "./routes/mongoRouters/chat.router.js"
 import sessionRouter from "./routes/mongoRouters/session.router.js"
 import productManager from "./DAO/mongoManagers/productManagerDB.js";
-import cartManager from "./DAO/mongoManagers/cartManagerDB.js";
 import userModel from "./DAO/models/user.model.js";
 import chatManager from "./DAO/mongoManagers/chatManagerDB.js";
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
 import config from "./config/config.js";
+import { addLogger } from "./logger/logger.js";
 
 // import product manager
 const productManagerImport = new productManager();
-const cartManagerImport = new cartManager();
 const chatManagerImport = new chatManager();
 // import express
 const app = express();
@@ -60,7 +59,7 @@ initializePassport()
 app.use(passport.initialize())
 app.use(passport.session())
 
-// rework this code to use the badge more efficiently. 
+// badge 
 app.use(async (req, res, next) => {
   if (req.session?.user) {
     
@@ -84,6 +83,10 @@ app.use(async (req, res, next) => {
   
     next();
   });
+  
+// logger
+app.use (addLogger)
+
 // import  routers
 app.use("/", viewsRouter);
 app.use("/api/carts", cartRouter);

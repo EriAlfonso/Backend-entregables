@@ -1,6 +1,7 @@
 import { Router } from "express";
 import cartManager from "../../DAO/mongoManagers/cartManagerDB.js";
 import productManager from "../../DAO/mongoManagers/productManagerDB.js";
+import { userAccess,authenticateToken } from "../../middlewares/authentication.js";
 import mongoose from "mongoose";
 import { cartPurchase } from "../../controllers/cart.controller.js";
 
@@ -9,7 +10,7 @@ const router = Router();
 const cartManagerImport = new cartManager();
 const productManagerImport = new productManager();
 
-router.get("/:cid", async (req, res) => {
+router.get("/:cid",authenticateToken,userAccess, async (req, res) => {
   const { cid } = req.params;
 
   try {
@@ -22,9 +23,9 @@ router.get("/:cid", async (req, res) => {
   }
 });
 
-router.post('/:cid/purchase', cartPurchase);
+router.post('/:cid/purchase',authenticateToken,userAccess, cartPurchase);
 
-router.post("/", async (req, res) => {
+router.post("/",authenticateToken,userAccess, async (req, res) => {
   try {
     const newCart = await cartManagerImport.createCart();
     res.status(200).json("A new cart was created");
@@ -33,7 +34,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.post("/:cid/product/:pid", async (req, res) => {
+router.post("/:cid/product/:pid",authenticateToken,userAccess, async (req, res) => {
   const { cid, pid } = req.params;
   const quantity = req.body.quantity || 1;
   try {
@@ -61,7 +62,7 @@ router.post("/:cid/product/:pid", async (req, res) => {
 });
 
 
-router.put("/:cid", async (req, res) => {
+router.put("/:cid",authenticateToken,userAccess, async (req, res) => {
   const { cid } = req.params;
 
   try {

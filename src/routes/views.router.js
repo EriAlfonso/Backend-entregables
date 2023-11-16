@@ -20,8 +20,8 @@ router.post("/add-products", authenticateToken, adminAccess, postNewProduct);
 router.get("/chat", authenticateToken, userAccess, getChat);
 router.post("/chat", authenticateToken, userAccess, sendMessage);
 // cart routers
-router.get("/carts", authenticateToken, getCarts);
-router.post("/carts/:cid/purchase", authenticateToken, cartPurchase);
+router.get("/carts", authenticateToken,userAccess, getCarts);
+router.post("/carts/:cid/purchase", authenticateToken,userAccess, cartPurchase);
 // session routers
 router.get("/login", getLogin);
 router.get("/register", getRegister);
@@ -36,6 +36,15 @@ router.get("/mockingproducts",
         }
     }), mockingProducts)
 
+// Logger Testing
+router.get("/loggerTest",(req,res)=>{
+req.logger.debug('Debug log message');
+req.logger.info('Info log message');
+req.logger.warn('Warning log message');
+req.logger.error('Error log message');
+req.logger.http('HTTP log message');
+res.send('Logging test complete');
+})
 
 
 

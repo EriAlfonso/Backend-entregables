@@ -1,12 +1,13 @@
 import { Router } from 'express';
 import productManager from '../../DAO/mongoManagers/productManagerDB.js';
 import productModel from '../../DAO/models/products.model.js';
+import { authenticateToken,adminAccess } from '../../middlewares/authentication.js';
 
 const router = Router();
 
 const productManagerImport = new productManager();
 
-router.post("/", async (req, res) => {
+router.post("/",authenticateToken, adminAccess, async (req, res) => {
   const { title, description, price, code, stock, category, thumbnail } = req.body;
 
   if (!title || !description || !code || !price || !stock || !category || !thumbnail) {
@@ -76,7 +77,7 @@ router.put("/:pid", async (req, res) => {
   }
 });
 
-router.delete("/:pid", async (req, res) => {
+router.delete("/:pid",authenticateToken, adminAccess, async (req, res) => {
   const productid = req.params.pid;
   try {
     let status = await productManagerImport.deleteProduct(productid);
