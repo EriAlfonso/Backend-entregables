@@ -19,6 +19,7 @@ import passport from "passport";
 import initializePassport from "./config/passport.config.js";
 import config from "./config/config.js";
 import { addLogger } from "./logger/logger.js";
+import { swaggerUi,swaggerSpec } from "./swagger/swaggerconfig.js";
 
 // import product manager
 const productManagerImport = new productManager();
@@ -93,6 +94,7 @@ app.use("/api/carts", cartRouter);
 app.use("/api/products", productRouter);
 app.use("/api/chat", chatRouter)
 app.use("/api/session", sessionRouter)
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 app.use(errorHandler)
 
 // port 
