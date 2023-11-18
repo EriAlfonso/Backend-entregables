@@ -300,23 +300,21 @@ paths:
 
 components:
   schemas:
-    Cart:
+    Carts:
       type: object
-      # Add properties relevant to Cart object as needed
       properties:
-        # Example properties:
-        items:
-          type: array
-          items:
-            $ref: '#/components/schemas/CartItem'
-        totalAmount:
-          type: number
-    CartItem:
-      type: object
-      # Add properties relevant to CartItem object as needed
-      properties:
-        # Example properties:
-        productId:
+        _id:
           type: string
-        quantity:
-          type: integer
+          description: 
+        products:
+          type: array
+          description: 
+          items:
+            type: object
+            properties:
+              _id:
+                type: string
+                description: 
+              quantity:
+                type: number
+                description: 
