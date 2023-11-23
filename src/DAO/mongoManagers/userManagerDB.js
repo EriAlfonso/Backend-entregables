@@ -56,5 +56,4 @@ export default class usersManager {
         throw e;
       }
     }
-  }
-  
+    }

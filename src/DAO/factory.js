@@ -5,6 +5,7 @@ export let Products;
 export let Carts;
 export let View;
 export let Ticket;
+export let User;
 
 switch (config.PERSISTENCE) {
     case "MEMORY" :
@@ -38,10 +39,12 @@ switch (config.PERSISTENCE) {
           })
         const {default: productManager } = await import("./mongoManagers/productManagerDB.js");
         const {default: cartManager} = await import("./mongoManagers/cartManagerDB.js");
-        const {default: ticketManager} = await import("./mongoManagers/ticketsManagerDB.js")
+        const {default: ticketManager} = await import("./mongoManagers/ticketsManagerDB.js");
+        const {default: usersManager} = await import("./mongoManagers/userManagerDB.js");
         Products = productManager;
         Carts = cartManager;
         Ticket = ticketManager;
+        User= usersManager;
       
         break;
     }

@@ -2,7 +2,6 @@ import cartModel from "../DAO/models/carts.model.js";
 import userModel from "../DAO/models/user.model.js";
 import EErrors from "./errors/enums.js";
 import cartsDTO from "../DTO/carts.dto.js";
-import mongoose from "mongoose";
 import { productRepository,ticketRepository} from "./index.js";
 
 
@@ -17,7 +16,6 @@ export default class cartService{
   async getCartByIdAndPopulate(id) {
     return this.cartDAO.getCartByIdAndPopulate(id);
 }
-
 
 async cartPurchase(cartId, user) {
   try {

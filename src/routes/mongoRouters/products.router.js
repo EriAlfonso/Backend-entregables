@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import productManager from '../../DAO/mongoManagers/productManagerDB.js';
-import productModel from '../../DAO/models/products.model.js';
 import { authenticateToken,adminAccess } from '../../middlewares/authentication.js';
 
 const router = Router();

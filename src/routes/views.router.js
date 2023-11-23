@@ -2,7 +2,7 @@ import { Router } from "express";
 import { getForm, getProductDetail, getProducts, getProductsHome, getRealTimeProducts, indexView, postNewProduct,mockingProducts } from "../controllers/product.controller.js";
 import { getChat, sendMessage } from "../controllers/chat.controller.js";
 import { cartPurchase, getCarts } from "../controllers/cart.controller.js";
-import { getLogin, getLogout, getProfile, getRegister } from "../controllers/session.controller.js";
+import { getLogin, getLogout, getPasswordMail, getPasswordReset, getProfile, getRegister } from "../controllers/session.controller.js";
 import { authenticateToken, adminAccess, userAccess } from "../middlewares/authentication.js";
 import compression from "express-compression";
 
@@ -27,6 +27,8 @@ router.get("/login", getLogin);
 router.get("/register", getRegister);
 router.get("/logout", authenticateToken, getLogout);
 router.get("/profile", authenticateToken, getProfile);
+router.get("/passwordReset",getPasswordReset)
+router.get("/passwordMail",getPasswordMail)
 // mocking router
 router.get("/mockingproducts",
     compression({

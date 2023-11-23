@@ -1,5 +1,3 @@
-import productManager from "../DAO/mongoManagers/productManagerDB.js";
-import cartModel from "../DAO/models/carts.model.js";
 import productDTO from "../DTO/products.dto.js";
 
 export default class productService {

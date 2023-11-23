@@ -28,7 +28,15 @@ export default class sessionController {
         const user = req.session.user;
         res.render("profile", user);
     }
+    
+    getPasswordReset(req,res){
+        res.render('passwordReset');
+    }
+
+    getPasswordMail(req,res){
+        res.render('passwordMail');
+    }
 }
 const sessionControllerimp = new sessionController();
-const { getLogin, getLogout, getProfile, getRegister } = sessionControllerimp
-export { getLogin, getLogout, getProfile, getRegister }
+const { getLogin, getLogout, getProfile, getRegister,getPasswordMail,getPasswordReset } = sessionControllerimp
+export { getLogin, getLogout, getProfile, getRegister,getPasswordMail,getPasswordReset }

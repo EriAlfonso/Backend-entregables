@@ -2,6 +2,8 @@ import { Router } from "express";
 import passport from "passport";
 import { generateToken } from "../../utils.js";
 
+
+
 const router = Router();
 
 router.post('/login', passport.authenticate('login', '/login'), async (req, res) => {
@@ -25,6 +27,35 @@ router.post('/register', passport.authenticate('register', {
         })
     redirect('/login')
 })
+
+router.get('/password-reset', (req, res) => {
+    const token = req.query.token;
+    if(!token) return res.redirect('/login')
+    try {
+    const decoded = jwt.verify(token, config.PRIVATE_KEY)
+    res.render('passwordReset', {email: decoded.email})
+    } catch (error) {
+    if (error) {
+        return res.redirect('/login');
+    } else {
+        return res.send({ success: false, message: error.message });
+    }
+    }
+  })
+
+router.get('validate-email', (req, res) => {
+    res.render('passwordMail'); 
+});
+
+router.post('/password-reset', async (req, res) => {
+const { email } = req.body; 
+    const result = await getUserByEmail(email);
+    if (result.success) {
+    res.render('success', { message: result.message }); 
+    } else {
+    res.render('error', { message: result.message }); 
+    }
+});
 
 router.get(
     '/login-github',
