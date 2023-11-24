@@ -1,6 +1,9 @@
 import { Router } from "express";
 import passport from "passport";
 import { generateToken } from "../../utils.js";
+import { getPasswordReset } from "../../controllers/session.controller.js";
+
+
 
 
 
@@ -47,15 +50,9 @@ router.get('validate-email', (req, res) => {
     res.render('passwordMail'); 
 });
 
-router.post('/password-reset', async (req, res) => {
-const { email } = req.body; 
-    const result = await getUserByEmail(email);
-    if (result.success) {
-    res.render('success', { message: result.message }); 
-    } else {
-    res.render('error', { message: result.message }); 
-    }
-});
+
+router.post('/passwordResetMail',getPasswordReset
+),
 
 router.get(
     '/login-github',

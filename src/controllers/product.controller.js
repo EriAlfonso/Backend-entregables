@@ -107,6 +107,8 @@ export default class productController {
         const result = await productRepository.addProduct(title, description, price, thumbnail, category, stock, code);
         res.redirect("/home");
     }
+
+    
     async mockingProducts(req, res) {
         try {
             const products = [];
