@@ -20,16 +20,18 @@ router.post('/login', passport.authenticate('login', '/login'), async (req, res)
     return res.redirect('/products')
 })
 
-router.post('/register', passport.authenticate('register', {
-    failureRedirect: '/register'
-}), async (req, res) => {
-    res.
-        cookie("UserJWTCookie", (user.token = access_token), {
-            maxAge: 60 * 60 * 1000,
-            httpOnly: true,
-        })
-    redirect('/login')
-})
+router.post('/register', passport.authenticate('register', '/register'
+), async (req, res) => {
+    const user = { _id: req.user._id }
+    console.log(user)
+    const access_token = generateToken(user)
+    console.log(access_token)
+    res.cookie("UserJWTCookie", access_token, {
+        maxAge: 60 * 60 * 1000,
+        httpOnly: true,
+    });
+    return res.redirect('/login'); 
+});
 
 router.get('/password-reset', (req, res) => {
     const token = req.query.token;

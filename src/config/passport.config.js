@@ -77,8 +77,7 @@ const initializePassport =() =>{
                 role
             }
             const result = await userModel.create(newUser)
-            const access_token = generateToken(result) 
-            return done(null, access_token)
+            return done(null,result)
         }
         catch(error){
             return done (error)
