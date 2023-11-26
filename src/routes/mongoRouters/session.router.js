@@ -33,7 +33,7 @@ router.post('/register', passport.authenticate('register', '/register'
     return res.redirect('/login'); 
 });
 
-router.get('/password-reset', (req, res) => {
+router.get('/passwordReset', (req, res) => {
     const token = req.query.token;
     if(!token) return res.redirect('/login')
     try {

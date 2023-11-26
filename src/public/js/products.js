@@ -20,7 +20,6 @@ document.addEventListener("DOMContentLoaded", () => {
                         body: JSON.stringify({ quantity: 1 }),
                     }
                 );
-                    console.log(response)
                 if (response.ok) {
                     window.location.href = "/products";
                 } else {

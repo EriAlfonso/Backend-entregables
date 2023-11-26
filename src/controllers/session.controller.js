@@ -52,7 +52,7 @@ export default class sessionController {
                 const userEmail = varifyToken.email;
                 return res.render('passwordReset', { email: userEmail });
             } else {
-                return res.status(401).send(varifyToken.error);
+                return res.render('passwordMail',);
             }
         } catch (error) {
             console.error('Error in password reset:', error);
@@ -72,14 +72,18 @@ export default class sessionController {
         res.render("passwordMail", {})
         }
 
-         newPassword = async (req, res) => {
+        newPassword = async (req, res) => {
             try {
                 const pass = req.body.password;
                 const mail = req.body.email
-                const response = sessionRepository.newPassword(mail, pass)
-                res.status(200).send({success: true, message: await response.message})
+                const response = await sessionRepository.newPassword(mail, pass)
+                if (response.success) {
+                    res.status(200).send("Password successfully changed!");
+                } else {
+                    res.status(400).send("Failed to change password: " + response.message);
+                }
             } catch (error) {
-                res.status(500).send({success:false, messagge: error.message})
+                res.status(500).send("Internal server error");
             }
         }
 }

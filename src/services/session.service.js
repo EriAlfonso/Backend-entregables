@@ -4,6 +4,7 @@ import config from "../config/config.js";
 import nodemailer from "nodemailer";
 import { createHash } from "../utils.js";
 import  jwt  from "jsonwebtoken";
+import bcrypt from "bcrypt"
 
 export default class sessionService {
     constructor(userDAO) {
@@ -120,14 +121,14 @@ export default class sessionService {
         }
     };
 
-
     newPassword = async (email, pass) => {
-        console.log(email, pass)
         try {
             const user = await this.userDAO.getUserByEmail(email);
             if (!user) return { success: false, message: 'Usuar Not Ffound' }
-            if (user.password === pass) return { success: false, message: 'New Password Cant Be The Same As Old Password' };
-            user.password = createHash(pass);
+            const passwordMatch = await bcrypt.compare(pass, user.password);
+            if (passwordMatch) return { success: false, message: 'New Password Cant Be The Same As Old Password' };
+            const newPass=createHash(pass)
+            user.password = newPass
             await user.save()
             return ({ success: true, message: 'New Password Set' })
         } catch (error) {
