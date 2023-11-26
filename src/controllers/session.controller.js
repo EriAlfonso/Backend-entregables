@@ -40,7 +40,8 @@ export default class sessionController {
 
     getProfile(req, res) {
         const user = req.session.user;
-        res.render("profile", user);
+        const userData= sessionRepository.getCurrent(user)
+        res.render("profile", userData);
     }
 
     async getPasswordReset(req, res) {

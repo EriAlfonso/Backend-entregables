@@ -81,6 +81,7 @@ router.get(
 
 router.get('/current', passport.authenticate('jwt', { session: false }), (req, res) => {
     const currentUser= sessionRepository.getCurrent(req.user)
+    console.log({ status: 'success', payload: currentUser })
     res.send({ status: 'success', payload: currentUser })
 })
 

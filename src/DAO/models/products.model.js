@@ -6,17 +6,15 @@ const productCollection = 'products';
 const productSchema = new mongoose.Schema({
     title: {type:String,
         index:true},
-
     description: String,
-
     price: Number,
-
     thumbnail: String,
-
     code: { type: String, unique: true },
-
     stock: Number,
-
+    owner: {
+        type: mongoose.Schema.Types.String,
+        ref: 'Users'
+    },
     category: {type:String,
         index:true},
         
