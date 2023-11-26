@@ -44,13 +44,21 @@ export default class sessionController {
     }
 
     async getPasswordReset(req, res) {
-        const { email } = req.body; 
-        const user = await sessionRepository.getUserByEmail(email);
-                if (!user) {
-                return res.render('error', { message: 'User not found' });
-                }
-                return res.render('success', { message: 'Password reset email can be sent.' });
-        }
+        const token = req.query.token; 
+        try {
+            const varifyToken = await sessionRepository.verifyToken(token);
+    
+            if (varifyToken.success) {
+                const userEmail = varifyToken.email;
+                return res.render('passwordReset', { email: userEmail });
+            } else {
+                return res.status(401).send(varifyToken.error);
+            }
+        } catch (error) {
+            console.error('Error in password reset:', error);
+            return res.status(500).send('Internal server error');
+        }};
+        
 
     async getMailReset(req, res) {try {
         const email = req.body.email
@@ -63,6 +71,17 @@ export default class sessionController {
     getPasswordMail(req, res) {
         res.render("passwordMail", {})
         }
+
+         newPassword = async (req, res) => {
+            try {
+                const pass = req.body.password;
+                const mail = req.body.email
+                const response = sessionRepository.newPassword(mail, pass)
+                res.status(200).send({success: true, message: await response.message})
+            } catch (error) {
+                res.status(500).send({success:false, messagge: error.message})
+            }
+        }
 }
 const sessionControllerimp = new sessionController();
 const {
@@ -74,6 +93,7 @@ const {
     getPasswordReset,
     getUserByEmail,
     getMailReset,
+    newPassword
 } = sessionControllerimp;
 export {
     getLogin,
@@ -84,4 +104,5 @@ export {
     getPasswordReset,
     getUserByEmail,
     getMailReset,
+    newPassword
 };

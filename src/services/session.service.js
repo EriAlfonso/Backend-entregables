@@ -2,6 +2,7 @@ import userDTO from "../DTO/users.dto.js";
 import userModel from "../DAO/models/user.model.js";
 import config from "../config/config.js";
 import nodemailer from "nodemailer";
+import { createHash } from "../utils.js";
 import  jwt  from "jsonwebtoken";
 
 export default class sessionService {
@@ -83,7 +84,6 @@ export default class sessionService {
                     <p>IcarusGames</p>`
                 }
                 const result = await transport.sendMail(mailOptions);
-                console.log('Password Reset Sent:', result);
             }
             catch (error) {
             console.error('Error Sending mail:', error);
@@ -105,16 +105,31 @@ export default class sessionService {
         }
     }
 
+    async verifyToken(token) {
+        try {
+            if (!token) {
+                return res.status(400).send('Invalid token'); 
+            }
+    
+            const user = jwt.verify(token, config.PRIVATE_KEY); 
+            const userEmail = user.email; 
+            return { success: true, email: userEmail };
+        } catch (error) {
+            console.error('Token verification error:', error);
+            return { success: false, error: 'Token verification failed' };
+        }
+    };
 
-    NewPassword = async (email, pass) => {
+
+    newPassword = async (email, pass) => {
         console.log(email, pass)
         try {
             const user = await this.userDAO.getUserByEmail(email);
-            if (!user) return { success: false, message: 'Usuario no encontrado' }
-            if (user.password === pass) return { success: false, message: 'No puedes usar el mismo password' };
+            if (!user) return { success: false, message: 'Usuar Not Ffound' }
+            if (user.password === pass) return { success: false, message: 'New Password Cant Be The Same As Old Password' };
             user.password = createHash(pass);
             await user.save()
-            return ({ success: true, message: 'Password actualizado con exito' })
+            return ({ success: true, message: 'New Password Set' })
         } catch (error) {
             return ({ succes: false, message: error.message })
         }
