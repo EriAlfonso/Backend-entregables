@@ -10,11 +10,12 @@ import errorHandler from "./middlewares/error.js";
 import cartRouter from "./routes/mongoRouters/carts.router.js";
 import productRouter from "./routes/mongoRouters/products.router.js";
 import viewsRouter from "./routes/views.router.js";
-import chatRouter from "./routes/mongoRouters/chat.router.js"
-import sessionRouter from "./routes/mongoRouters/session.router.js"
+import chatRouter from "./routes/mongoRouters/chat.router.js";
+import userRouter from "./routes/mongoRouters/users.router.js"
+import sessionRouter from "./routes/mongoRouters/session.router.js";
 import productManager from "./DAO/mongoManagers/productManagerDB.js";
-import userModel from "./DAO/models/user.model.js";
 import chatManager from "./DAO/mongoManagers/chatManagerDB.js";
+import userModel from "./DAO/models/user.model.js";
 import passport from "passport";
 import initializePassport from "./config/passport.config.js";
 import config from "./config/config.js";
@@ -92,8 +93,9 @@ app.use (addLogger)
 app.use("/", viewsRouter);
 app.use("/api/carts", cartRouter);
 app.use("/api/products", productRouter);
-app.use("/api/chat", chatRouter)
-app.use("/api/session", sessionRouter)
+app.use("/api/chat", chatRouter);
+app.use("/api/users", userRouter);
+app.use("/api/session", sessionRouter);
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 app.use(errorHandler)
 

@@ -6,6 +6,7 @@ import githubStrategy from "passport-github2";
 import { createHash,generateToken,isValidPassword } from "../utils.js";
 import jwt from "passport-jwt";
 import config from "./config.js";
+import userDTO from "../DTO/users.dto.js";
 
 const LocalStrategy = local.Strategy
 const JwtStrategy = jwt.Strategy
@@ -31,9 +32,10 @@ const initializePassport =() =>{
                 const email=profile._json.email
                 const user= await userModel.findOne({email: profile._json.email})
                 if (user){
-                    const access_token = generateToken({user})
-                    user.token=access_token
-                    return done(null,user)
+            const userData=new userDTO(user)
+            const access_token = generateToken({userData})
+            userData.access_token = access_token;
+                    return done(null,userData)
                 }
               
                 const cart = new cartModel()
@@ -96,9 +98,10 @@ const initializePassport =() =>{
                 console.error('Invalid Password')
                 return done (null,false)
             }
-            const access_token = generateToken(user); 
-            user.access_token = access_token;
-            return done (null,user)
+            const userData=new userDTO(user)
+            const access_token = generateToken({userData})
+            userData.access_token = access_token;
+            return done (null,userData)
         } catch (error){
             return done (error)
         }
