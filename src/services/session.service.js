@@ -58,7 +58,10 @@ export default class sessionService {
         });
     }
     
-    
+    getCurrent(user){
+        const userData = new userDTO(user); 
+        return userData;
+    }
     
         sendResetEMail = async (email) => {
             try {

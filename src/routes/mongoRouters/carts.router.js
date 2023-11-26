@@ -74,7 +74,7 @@ router.put("/:cid",authenticateToken,userAccess, async (req, res) => {
 });
 
 
-router.put("/:cid/product/:pid", async (req, res) => {
+router.put("/:cid/product/:pid",authenticateToken,userAccess, async (req, res) => {
   const { cid, pid } = req.params;
   const { quantity } = req.body;
 
@@ -101,7 +101,7 @@ router.put("/:cid/product/:pid", async (req, res) => {
   }
 });
 
-  router.delete("/:cid", async (req, res) => {
+  router.delete("/:cid",authenticateToken,userAccess, async (req, res) => {
     const { cid } = req.params;
     try {
       const result = await cartManagerImport.removeAllProductsFromCart(cid);
@@ -115,7 +115,7 @@ router.put("/:cid/product/:pid", async (req, res) => {
     }
   });
   
-  router.delete("/:cid/products/:pid", async (req, res) => {
+  router.delete("/:cid/products/:pid",authenticateToken,userAccess, async (req, res) => {
     const { cid, pid } = req.params;
     try {
       await cartManagerImport.removeProductFromCart(cid, pid);

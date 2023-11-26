@@ -57,7 +57,7 @@ router.get("/:pid", async (req, res) => {
   }
 });
 
-router.put("/:pid", async (req, res) => {
+router.put("/:pid",authenticateToken,adminAccess, async (req, res) => {
   const { pid } = req.params;
   const props = req.body;
 

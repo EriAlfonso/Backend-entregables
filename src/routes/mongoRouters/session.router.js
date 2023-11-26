@@ -1,7 +1,8 @@
 import { Router } from "express";
 import passport from "passport";
 import { generateToken } from "../../utils.js";
-import { getPasswordReset } from "../../controllers/session.controller.js";
+import { getPasswordReset} from "../../controllers/session.controller.js";
+import { sessionRepository } from "../../services/index.js";
 
 
 
@@ -79,7 +80,8 @@ router.get(
 )
 
 router.get('/current', passport.authenticate('jwt', { session: false }), (req, res) => {
-    res.send({ status: 'success', payload: req.user })
+    const currentUser= sessionRepository.getCurrent(req.user)
+    res.send({ status: 'success', payload: currentUser })
 })
 
 export default router;
