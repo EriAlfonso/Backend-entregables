@@ -5,27 +5,17 @@ export default class productManager {
   
  }
 
-  addProduct = async (title, description, price, thumbnail, category, stock, code) => {
+  addProduct = async (product) => {
+    const productCode= product.code
     try {
-      const validate = await productModel.findOne({ code });
+      const validate = await productModel.findOne({ productCode });
       if (validate) {
         return {
           success: false,
-          message: `Product with code ${code} already exists.`,
+          message: `Product with code ${productCode} already exists.`,
         };
       } else {
-        const newProduct = {
-          title,
-          description,
-          price,
-          thumbnail,
-          category,
-          stock,
-          code,
-          status: true,
-        };
-
-        await productModel.create(newProduct);
+        await productModel.create(product);
         return { success: true, message: "Product created successfully" };
       }
     } catch (error) {

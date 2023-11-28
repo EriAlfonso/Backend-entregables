@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import productManager from '../../DAO/mongoManagers/productManagerDB.js';
-import { authenticateToken,adminAccess } from '../../middlewares/authentication.js';
+import { authenticateToken,adminAccess, premiumAccess } from '../../middlewares/authentication.js';
 
 const router = Router();
 
@@ -22,7 +22,7 @@ router.post("/",authenticateToken, adminAccess, async (req, res) => {
       return res.status(409).json({ error: result.message });
     }
   } catch (err) {
-    return res.status(500).json({ error: "Internal Server Error" });
+    return req.logger.fatal('Internal Server Error');
   }
 });
 
@@ -39,8 +39,8 @@ router.get("/", async (req, res) => {
     const result = await productManagerImport.getProductsQuery(options);
     res.json(result);
   } catch (error) {
-    console.error("Error fetching products:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    req.logger.error("Error fetching products:", error);
+    req.logger.fatal('Internal Server Error')
   }
 });
 
@@ -57,7 +57,7 @@ router.get("/:pid", async (req, res) => {
   }
 });
 
-router.put("/:pid",authenticateToken,adminAccess, async (req, res) => {
+router.put("/:pid",authenticateToken,premiumAccess, async (req, res) => {
   const { pid } = req.params;
   const props = req.body;
 

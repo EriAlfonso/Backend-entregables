@@ -20,7 +20,7 @@ export function authenticateToken(req, res, next) {
 }
 
 export function userAccess (req, res, next) {
-    if (req.session && req.session.user && req.session.user.role === 'user') {
+    if (req.session && req.session.user && req.session.user.role === 'user'|| req.session.user.role === 'premium') {
         next();
     } else {
         res.status(403).send("Access Denied"); 
@@ -34,3 +34,12 @@ export function adminAccess (req, res, next) {
         res.status(403).send("Access Denied"); 
     }
 };
+
+export function premiumAccess (req, res, next) {
+    if (req.session && req.session.user && req.session.user.role === 'admin'|| req.session.user.role === 'premium') {
+        next(); 
+    } else {
+        res.status(403).send("Access Denied"); 
+    }
+};
+

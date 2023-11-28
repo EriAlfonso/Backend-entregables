@@ -102,11 +102,21 @@ export default class productController {
     }
 
     async postNewProduct(req, res) {
+        if (req.session && req.session.user) {
+            let owner = '';
+            if (req.session.user.role === 'admin') {
+                owner = 'admin';
+            } else if (req.session.user.role === 'premium') {
+                owner = req.session.user.email;
+            } else {
+                return res.status(403).send('Access Denied');
+            }
         const { title, description, price, thumbnail, category, stock, code } = req.body;
-
-        const result = await productRepository.addProduct(title, description, price, thumbnail, category, stock, code);
+            const product={title, description, price, thumbnail, category, stock, code, owner, status: true}
+        const result = await productRepository.addProduct(product);
+        console.log(result)
         res.redirect("/home");
-    }
+    }}
 
     
     async mockingProducts(req, res) {

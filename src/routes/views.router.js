@@ -3,7 +3,7 @@ import { getForm, getProductDetail, getProducts, getProductsHome, getRealTimePro
 import { getChat, sendMessage } from "../controllers/chat.controller.js";
 import { cartPurchase, getCarts } from "../controllers/cart.controller.js";
 import { getLogin, getLogout, getPasswordMail, getPasswordReset, getProfile,newPassword, getRegister,getMailReset } from "../controllers/session.controller.js";
-import { authenticateToken, adminAccess, userAccess } from "../middlewares/authentication.js";
+import { authenticateToken, adminAccess, userAccess, premiumAccess } from "../middlewares/authentication.js";
 import compression from "express-compression";
 
 const router = Router();
@@ -14,8 +14,8 @@ router.get("/home", authenticateToken, getProductsHome);
 router.get("/products", authenticateToken, getProducts);
 router.get("/products/:pid", authenticateToken, getProductDetail);
 router.get("/realTimeProducts", authenticateToken, adminAccess, getRealTimeProducts);
-router.get("/add-products", authenticateToken, adminAccess, getForm);
-router.post("/add-products", authenticateToken, adminAccess, postNewProduct);
+router.get("/add-products", authenticateToken, premiumAccess, getForm);
+router.post("/add-products", authenticateToken, premiumAccess, postNewProduct);
 // chat routers
 router.get("/chat", authenticateToken, userAccess, getChat);
 router.post("/chat", authenticateToken, userAccess, sendMessage);
@@ -46,6 +46,7 @@ req.logger.debug('Debug log message');
 req.logger.info('Info log message');
 req.logger.warn('Warning log message');
 req.logger.error('Error log message');
+req.logger.fatal('Fatal log message')
 req.logger.http('HTTP log message');
 res.send('Logging test complete');
 })
