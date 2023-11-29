@@ -15,6 +15,7 @@ export default class chatController {
             const savedMessage = await chatManagerImport.saveMessage(user, message);
             res.json(savedMessage);
         } catch (error) {
+            req.logger.fatal('Internal Server Error', { error: err })
             res.status(500).json({ error: "Internal Server Error" });
         }
     }

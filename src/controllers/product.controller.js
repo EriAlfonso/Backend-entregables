@@ -45,6 +45,8 @@ export default class productController {
             });
         } catch (error) {
             console.error("Error fetching products:", error);
+            req.logger.error("Error fetching products:", error)
+    req.logger.fatal('Internal Server Error', { error: err })
             res.status(500).json({ error: "Internal Server Error" });
         }
     }
@@ -78,9 +80,12 @@ export default class productController {
             });
         } catch (err) {
             if (err.message.includes("Product with id")) {
+                req.logger.error(`Product with id:${pid};not found`)
                 res.status(404).json({ error404: err.message });
             } else {
                 console.error("Error fetching product details:", err);
+                req.logger.error("Error fetching product details:", err)
+                req.logger.fatal('Internal Server Error', { error: err })
                 res.status(500).json({ error: "Internal Server Error" });
             }
         }
@@ -109,6 +114,7 @@ export default class productController {
             } else if (req.session.user.role === 'premium') {
                 owner = req.session.user.email;
             } else {
+                req.logger.info("No Permissions/Access granted")
                 return res.status(403).send('Access Denied');
             }
         const { title, description, price, thumbnail, category, stock, code } = req.body;
@@ -148,7 +154,7 @@ export default class productController {
             }
             res.render("mocking",  {products})
         } catch (error) {
-            logger.error('An error occurred ' + error.message)
+            req.logger.error('An error occurred ' + error.message)
             return {success: false, message: "Product not found"}
         }
       }

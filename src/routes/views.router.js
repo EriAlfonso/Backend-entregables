@@ -46,7 +46,7 @@ req.logger.debug('Debug log message');
 req.logger.info('Info log message');
 req.logger.warn('Warning log message');
 req.logger.error('Error log message');
-req.logger.fatal('Fatal log message')
+req.logger.fatal('Fatal log message');
 req.logger.http('HTTP log message');
 res.send('Logging test complete');
 })

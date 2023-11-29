@@ -11,7 +11,8 @@ import { sessionRepository } from "../../services/index.js";
 const router = Router();
 
 router.post('/login', passport.authenticate('login', '/login'), async (req, res) => {
-    if (!req.user) return res.status(400).send('Invalid User Data')
+    if (!req.user)
+    return res.status(400).send('Invalid User Data')
     const access_token = req.user.access_token;
     res.cookie('UserJWTCookie', access_token, {
         maxAge: 60 * 60 * 1000,
@@ -24,9 +25,7 @@ router.post('/login', passport.authenticate('login', '/login'), async (req, res)
 router.post('/register', passport.authenticate('register', '/register'
 ), async (req, res) => {
     const user = { _id: req.user._id }
-    console.log(user)
     const access_token = generateToken(user)
-    console.log(access_token)
     res.cookie("UserJWTCookie", access_token, {
         maxAge: 60 * 60 * 1000,
         httpOnly: true,
@@ -49,11 +48,6 @@ router.get('/passwordReset', (req, res) => {
     }
   })
 
-router.get('validate-email', (req, res) => {
-    res.render('passwordMail'); 
-});
-
-
 router.post('/passwordResetMail',getPasswordReset
 ),
 
@@ -69,7 +63,6 @@ router.get(
     async (req, res) => {
         const user = req.user
         const access_token = generateToken({user})
-
         res.cookie("UserJWTCookie", access_token, {
             maxAge: 60 * 60 * 1000,
             httpOnly: true,
@@ -81,7 +74,6 @@ router.get(
 
 router.get('/current', passport.authenticate('jwt', { session: false }), (req, res) => {
     const currentUser= sessionRepository.getCurrent(req.user.userData)
-    console.log({ status: 'success', payload: currentUser })
     res.send({ status: 'success', payload: currentUser })
 })
 

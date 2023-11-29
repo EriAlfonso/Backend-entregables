@@ -24,6 +24,8 @@ async getCarts(req, res) {
         res.render("carts", { products: cart.products, cartTotalPrice, user, cartID });
     } catch (error) {
         console.error("Error fetching cart:", error);
+        req.logger.error("Error fetching cart:", error);
+        req.logger.fatal('Internal Server Error', { error: err })
         res.status(500).json({ error: "Internal Server Error" });
     }
 }
@@ -39,6 +41,8 @@ async cartPurchase(req, res) {
     res.status(200).json({ message: 'Purchase completed successfully', ticket , newCart});
   } catch (error) {
     console.error('Purchase error:', error);
+    req.logger.error('Purchase error:', error)
+    req.logger.fatal('Internal Server Error', { error: err })
     res.status(500).json({ error: 'Internal Server Error' });
   }
 }

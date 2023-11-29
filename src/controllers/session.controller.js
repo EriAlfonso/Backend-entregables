@@ -19,6 +19,8 @@ export default class sessionController {
             return res.status(200).json({ user });
         } catch (error) {
             console.error("Error fetching user by email:", error);
+            req.logger.error("Error fetching user details:", error)
+            req.logger.fatal('Internal Server Error', { error })
             return res.status(500).json({ error: "Internal server error" });
         }
     }
@@ -57,6 +59,8 @@ export default class sessionController {
             }
         } catch (error) {
             console.error('Error in password reset:', error);
+            req.logger.error("Error resetting passwords/permissions:", error)
+            req.logger.fatal('Internal Server Error', { error })
             return res.status(500).send('Internal server error');
         }};
         
@@ -81,9 +85,11 @@ export default class sessionController {
                 if (response.success) {
                     res.status(200).send("Password successfully changed!");
                 } else {
+                    req.logger.error("Password Change Failed")
                     res.status(400).send("Failed to change password: " + response.message);
                 }
             } catch (error) {
+                req.logger.fatal('Internal Server Error', { error })
                 res.status(500).send("Internal server error");
             }
         }
