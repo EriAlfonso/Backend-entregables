@@ -107,14 +107,12 @@ export default class productManager {
     }
   };
 
-  deleteProduct = async (_id) => {
+  deleteProduct = async (id) => {
     try {
-      const productDeleted = await productModel.findByIdAndDelete(_id);
-
+      const productDeleted = await productModel.findByIdAndDelete(id);
       if (productDeleted === null) {
         throw new Error("Product does not exist");
       }
-
       return "Product removed successfully";
     } catch (error) {
       throw error;

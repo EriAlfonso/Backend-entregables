@@ -1,0 +1,8 @@
+{"level":"error","message":"Error deleting product id: 65668e7600d84f3434a67108","timestamp":"2023-11-29T01:06:10.489Z"}
+{"level":"error","message":"Error deleting product id: 65668e7600d84f3434a67108","timestamp":"2023-11-29T01:09:48.983Z"}
+{"level":"error","message":"Error deleting product id: 65668e7600d84f3434a67108","timestamp":"2023-11-29T01:10:39.132Z"}
+{"level":"error","message":"Error deleting product id: 65668e7600d84f3434a67108","timestamp":"2023-11-29T01:12:53.124Z"}
+{"level":"error","message":"Error deleting product id: 65668e7600d84f3434a67108","timestamp":"2023-11-29T01:13:34.401Z"}
+{"level":"error","message":"Error deleting product id: 65668e7600d84f3434a67108","timestamp":"2023-11-29T01:15:00.054Z"}
+{"level":"error","message":"error deleting product Product does not exist","stack":"Error: Product does not exist\n    at productManager.deleteProduct (file:///C:/Users/Usuario/Desktop/backend/entregables/src/DAO/mongoManagers/productManagerDB.js:115:15)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async deleteProduct (file:///C:/Users/Usuario/Desktop/backend/entregables/src/controllers/product.controller.js:166:28)","timestamp":"2023-11-29T01:16:34.409Z"}
+{"error":{},"level":"fatal","message":"Internal Server Error","timestamp":"2023-11-29T01:16:34.413Z"}

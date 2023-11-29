@@ -120,8 +120,7 @@ export default class productController {
         const { title, description, price, thumbnail, category, stock, code } = req.body;
             const product={title, description, price, thumbnail, category, stock, code, owner, status: true}
         const result = await productRepository.addProduct(product);
-        console.log(result)
-        res.redirect("/home");
+        res.redirect("/products");
     }}
 
     
@@ -158,10 +157,41 @@ export default class productController {
             return {success: false, message: "Product not found"}
         }
       }
+
+      async deleteProduct(req,res){
+        const  id = req.params.pid;
+        const { user } = req 
+        try {
+            if (user.role !== 'admin' && user.role !== 'premium') {
+                return res.status(403).json({ error: 'Unauthorized: Insufficient role' });
+            }
+            const product = await productRepository.getProductById(id);
+        if (!product) {
+            req.logger.error(`Product with id:${id} Not found `)
+            return res.status(404).json({ error: 'Product not found' });
+        }
+        if (user.role === 'premium' && product.owner !== user.email) {
+            req.logger.error(`User:${user.first_name} Does not own the product`)
+            return res.status(403).json({ error: 'Unauthorized: User does not own the product' });
+        }
+            const result = await productRepository.deleteProduct(id);
+            if (result) {
+                req.logger.info (`Product with id:${id} Deleted`)
+                return res.status(200).json({ message: 'Product deleted successfully' });
+            } else {
+                req.logger.error("Product not found")
+                return res.status(404).json({ error: 'Product not found or could not be deleted' });
+            }
+        } catch (error) {
+            req.logger.error("error deleting product",error); 
+            req.logger.fatal('Internal Server Error', { error })
+            return res.status(500).json({ error: 'Internal Server Error' });
+        }
+      }
 }
 
 const productControllerimp = new productController();
-const { getProducts, getProductsHome, postNewProduct, getForm, getRealTimeProducts, getProductDetail, indexView, mockingProducts } = productControllerimp;
+const { deleteProduct, getProducts, getProductsHome, postNewProduct, getForm, getRealTimeProducts, getProductDetail, indexView, mockingProducts } = productControllerimp;
 export {
-    getForm, getProductDetail, getProductsHome, getRealTimeProducts, postNewProduct, getProducts, indexView,mockingProducts
+    getForm, getProductDetail, getProductsHome, getRealTimeProducts, postNewProduct, getProducts, indexView,mockingProducts,deleteProduct
 }

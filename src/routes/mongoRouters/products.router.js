@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import productManager from '../../DAO/mongoManagers/productManagerDB.js';
+import {deleteProduct} from '../../controllers/product.controller.js';
 import { authenticateToken,adminAccess, premiumAccess } from '../../middlewares/authentication.js';
 
 const router = Router();
@@ -81,16 +82,6 @@ router.put("/:pid",authenticateToken,premiumAccess, async (req, res) => {
   }
 });
 
-router.delete("/:pid",authenticateToken, adminAccess, async (req, res) => {
-  const productid = req.params.pid;
-  try {
-    let status = await productManagerImport.deleteProduct(productid);
-    res.json({ success: true, status });
-  } catch (error) {
-    req.logger.error(`Error deleting product id: ${productid}`);
-    res.status(404).json({ success: false, message: error.message });
-  }
-}
-);
+router.delete("/:pid",authenticateToken, adminAccess,deleteProduct);
 
 export default router;

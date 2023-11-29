@@ -18,9 +18,11 @@ export default class productService {
     }
 
     async addProduct(product) {
-        console.log(product)
+
         const productData = new productDTO(product); 
-        console.log("afterdto",productData)
         return this.productDAO.addProduct(productData);
+    }
+    async deleteProduct(id){
+        return this.productDAO.deleteProduct(id)
     }
 }
