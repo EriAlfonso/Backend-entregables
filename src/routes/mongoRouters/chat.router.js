@@ -31,7 +31,7 @@ router.post("/",authenticateToken,userAccess, async (req, res) => {
   } catch (error) {
     req.logger.error("Error saving chat message:", error);
     req.logger.fatal('Internal Server Error', { error: err })
-    res.status(500).json({ error: "Internal Server Error" });
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 });
 

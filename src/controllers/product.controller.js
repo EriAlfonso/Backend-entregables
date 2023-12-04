@@ -160,7 +160,7 @@ export default class productController {
 
       async deleteProduct(req,res){
         const  id = req.params.pid;
-        const { user } = req 
+        const { user } = req.user 
         try {
             if (user.role !== 'admin' && user.role !== 'premium') {
                 return res.status(403).json({ error: 'Unauthorized: Insufficient role' });

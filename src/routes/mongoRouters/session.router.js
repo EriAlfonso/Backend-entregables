@@ -74,7 +74,6 @@ router.get(
 
 router.get('/current', passport.authenticate('jwt', { session: false }), (req, res) => {
     const currentUser= sessionRepository.getCurrent(req.user)
-    console.log("/current currentUser variable:",currentUser)
     res.send({ status: 'success', payload: currentUser })
 })
 

@@ -29,7 +29,7 @@ router.post("/",authenticateToken,userAccess, async (req, res) => {
     res.status(200).json("A new cart was created");
   } catch (err) {
     req.logger.error('Error creating new cart');
-    res.status(400).json({ error: "Error creating cart" });
+    return res.status(400).json({ error: "Error creating cart" });
   }
 });
 
@@ -55,10 +55,10 @@ router.post("/:cid/product/:pid",authenticateToken,userAccess, async (req, res) 
   } catch (err) {
     if (err.message.includes("Cart with id")) {
       req.logger.error('Error adding product: Cart or Product not found');
-      res.status(404).json({ error: err.message });
+      return res.status(404).json({ error: err.message });
     } else {
       req.logger.fatal('Internal Server Error', { error: err })
-      res.status(500).json({ error: "Internal Server Error" });
+      return res.status(500).json({ error: "Internal Server Error" });
     }
   }
 });
@@ -69,10 +69,10 @@ router.put("/:cid",authenticateToken,userAccess, async (req, res) => {
 
   try {
     const result = await cartManagerImport.updateCartArray(cid);
-    res.status(200).json({ message: result });
+    return res.status(200).json({ message: result });
   } catch (err) {
     req.logger.fatal('Internal Server Error', { error: err })
-    res.status(500).json({ error: "Internal Server Error" });
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
