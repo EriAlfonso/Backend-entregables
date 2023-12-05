@@ -7,15 +7,15 @@ const router = Router();
 
 const productManagerImport = new productManager();
 
-router.post("/",authenticateToken, adminAccess, async (req, res) => {
+router.post("/",authenticateToken, premiumAccess, async (req, res) => {
   const { title, description, price, code, stock, category, thumbnail } = req.body;
-
-  if (!title || !description || !code || !price || !stock || !category || !thumbnail) {
+  const owner=req.session.user.email;
+  if (!title || !description || !code || !price || !stock || !category || !thumbnail||owner) {
     return res.status(400).json({ error: "All fields are required" });
   }
 
   try {
-    const result = await productManagerImport.addProduct(title, description, price, thumbnail, category, stock, code);
+    const result = await productManagerImport.addProduct(title, description, price, thumbnail, category, stock, code,owner);
 
     if (result.success) {
       return res.status(201).json({ message: result.message });

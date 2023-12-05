@@ -35,10 +35,8 @@ const initializePassport =() =>{
             const userData=new userDTO(user)
             const access_token = generateToken({userData})
             userData.access_token = access_token;
-            console.log("Login UserData Variable After accessToken:",userData)
                     return done(null,userData)
                 }
-              
                 const cart = new cartModel()
                 const cartid = cart._id
                 const newUser={
@@ -102,7 +100,6 @@ const initializePassport =() =>{
             const userData=new userDTO(user)
             const access_token = generateToken({userData})
             userData.access_token = access_token;
-            console.log("Login UserData Variable After accessToken:",userData)
             return done (null,userData)
         } catch (error){
             return done (error)
@@ -121,10 +118,7 @@ const initializePassport =() =>{
         catch(error){
             return done(error)
         }
-
     }))
-
-
     passport.serializeUser((user,done)=>{
         done (null,user._id)
     })

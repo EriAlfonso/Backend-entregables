@@ -1,6 +1,6 @@
 <h2>Products Updated in Realtime</h2>
-
-<form action="/add-products" method="post">
+{{!-- check code --}}
+<form id="realTimeForm">
     <div class="row">
         <div class="col-md-5 mb-3">
             <label for="title" class="form-label">Title:</label>
@@ -43,6 +43,7 @@
             <input type="text" class="form-control" name="code" id="code" required>
         </div>
     </div>
+    <input type="hidden" name="owner" value="<%= user.email %>">
     <button type="submit" class="btn btn-outline-success">Add Product</button>
 </form>
 

@@ -46,7 +46,7 @@ export default class productController {
         } catch (error) {
             console.error("Error fetching products:", error);
             req.logger.error("Error fetching products:", error)
-    req.logger.fatal('Internal Server Error', { error: err })
+            req.logger.fatal('Internal Server Error', { error: err })
             res.status(500).json({ error: "Internal Server Error" });
         }
     }
@@ -62,7 +62,7 @@ export default class productController {
             if (!userWithCart || !userWithCart.cart) {
                 const cart = new cartModel();
                 const savedCart = await cart.save();
-                
+
                 userWithCart.cart = savedCart._id;
                 await userWithCart.save();
             }
@@ -117,81 +117,82 @@ export default class productController {
                 req.logger.info("No Permissions/Access granted")
                 return res.status(403).send('Access Denied');
             }
-        const { title, description, price, thumbnail, category, stock, code } = req.body;
-            const product={title, description, price, thumbnail, category, stock, code, owner, status: true}
-        const result = await productRepository.addProduct(product);
-        res.redirect("/products");
-    }}
+            const { title, description, price, thumbnail, category, stock, code } = req.body;
+            const product = { title, description, price, thumbnail, category, stock, code, owner, status: true }
+            const result = await productRepository.addProduct(product);
+            res.redirect("/products");
+        }
+    }
 
-    
+
     async mockingProducts(req, res) {
         try {
             const products = [];
-    
-      for (let i = 0; i < 100; i++) {
-        const productName = faker.commerce.productName();
-        const productPrice = faker.commerce.price();
-        const productCategory = faker.lorem.word();
-        const productImage = faker.image.url();
-    
-        const product = {
-          title: productName,
-          price: productPrice,
-          category: productCategory,
-          thumbnail: productImage,
-        };
-    
-        products.push(product);
-      }
-            if (!products) {
-                const error =new Error();
-                    error.name= "error getting products",
-                    error.cause= ErrorGetProducts(),
-                    error.message= "Product not found",
-                    error.code= EErrors.PRODUCT_NOT_FOUND
-                    return next(error);
+
+            for (let i = 0; i < 100; i++) {
+                const productName = faker.commerce.productName();
+                const productPrice = faker.commerce.price();
+                const productCategory = faker.lorem.word();
+                const productImage = faker.image.url();
+
+                const product = {
+                    title: productName,
+                    price: productPrice,
+                    category: productCategory,
+                    thumbnail: productImage,
+                };
+
+                products.push(product);
             }
-            res.render("mocking",  {products})
+            if (!products) {
+                const error = new Error();
+                error.name = "error getting products",
+                    error.cause = ErrorGetProducts(),
+                    error.message = "Product not found",
+                    error.code = EErrors.PRODUCT_NOT_FOUND
+                return next(error);
+            }
+            res.render("mocking", { products })
         } catch (error) {
             req.logger.error('An error occurred ' + error.message)
-            return {success: false, message: "Product not found"}
+            return { success: false, message: "Product not found" }
         }
-      }
+    }
 
-      async deleteProduct(req,res){
-        const  id = req.params.pid;
-        const { user } = req.user 
+    async deleteProduct(req, res) {
+        const id = req.params.pid;
+        const { user } = req.user
         try {
             if (user.role !== 'admin' && user.role !== 'premium') {
-                return res.status(403).json({ error: 'Unauthorized: Insufficient role' });
+                return res.status(403).json({ error: 'Unauthorized: Insufficient role access' });
             }
             const product = await productRepository.getProductById(id);
-        if (!product) {
-            req.logger.error(`Product with id:${id} Not found `)
-            return res.status(404).json({ error: 'Product not found' });
-        }
-        if (user.role === 'premium' && product.owner !== user.email) {
-            req.logger.error(`User:${user.first_name} Does not own the product`)
-            return res.status(403).json({ error: 'Unauthorized: User does not own the product' });
-        }
+            if (!product) {
+                req.logger.error(`Product with id:${id} Not found `)
+                return res.status(404).json({ error: 'Product not found' });
+            }
+            if (user.role === 'premium' && product.owner !== user.email) {
+                req.logger.error(`User:${user.first_name} Does not own the product`)
+                return res.status(403).json({ error: 'Unauthorized: User does not own the product' });
+            }
             const result = await productRepository.deleteProduct(id);
             if (result) {
-                req.logger.info (`Product with id:${id} Deleted`)
+                req.logger.info(`Product with id:${id} Deleted`)
                 return res.status(200).json({ message: 'Product deleted successfully' });
             } else {
                 req.logger.error("Product not found")
                 return res.status(404).json({ error: 'Product not found or could not be deleted' });
             }
         } catch (error) {
-            req.logger.error("error deleting product",error); 
+            req.logger.error("error deleting product", error);
             req.logger.fatal('Internal Server Error', { error })
             return res.status(500).json({ error: 'Internal Server Error' });
         }
-      }
+    }
 }
 
 const productControllerimp = new productController();
 const { deleteProduct, getProducts, getProductsHome, postNewProduct, getForm, getRealTimeProducts, getProductDetail, indexView, mockingProducts } = productControllerimp;
 export {
-    getForm, getProductDetail, getProductsHome, getRealTimeProducts, postNewProduct, getProducts, indexView,mockingProducts,deleteProduct
+    getForm, getProductDetail, getProductsHome, getRealTimeProducts, postNewProduct, getProducts, indexView, mockingProducts, deleteProduct
 }

@@ -1,5 +1,4 @@
 import express from "express";
-import mongoose from "mongoose";
 import MongoStore from "connect-mongo";
 import __dirname from "./utils.js";
 import { Server } from "socket.io";
@@ -13,6 +12,7 @@ import viewsRouter from "./routes/views.router.js";
 import chatRouter from "./routes/mongoRouters/chat.router.js";
 import userRouter from "./routes/mongoRouters/users.router.js"
 import sessionRouter from "./routes/mongoRouters/session.router.js";
+import paymentRouter from "./routes/mongoRouters/payments.router.js"
 import productManager from "./DAO/mongoManagers/productManagerDB.js";
 import chatManager from "./DAO/mongoManagers/chatManagerDB.js";
 import userModel from "./DAO/models/user.model.js";
@@ -97,21 +97,11 @@ app.use("/api/chat", chatRouter);
 app.use("/api/users", userRouter);
 app.use("/api/session", sessionRouter);
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
+app.use(paymentRouter)
 app.use(errorHandler)
 
 // port 
 const httpServer = app.listen(8080, () => console.log("Server is Running.."));
-
-// mongo 
-mongoose.connect(config.MONGO_URL, {
-  dbName: config.MONGO_NAME,
-})
-  .then(() => {
-    console.log("DB connected");
-  })
-  .catch((error) => {
-    console.error(error);
-  });
 
 // server io
 const io = new Server(httpServer);
