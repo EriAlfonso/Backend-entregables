@@ -85,6 +85,6 @@ router.put("/:pid",authenticateToken,premiumAccess, async (req, res) => {
   }
 });
 
-router.delete("/:pid",authenticateToken, adminAccess,deleteProduct);
+router.delete("/:pid",authenticateToken, premiumAccess,deleteProduct);
 
 export default router;

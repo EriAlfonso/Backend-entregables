@@ -60,7 +60,6 @@ export default class sessionService {
     
     getCurrent(user){
         const {iat,exp,...userData} = user; 
-        console.log(userData)
         return userData;
     }
     
