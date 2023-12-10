@@ -18,6 +18,16 @@ const userSchema = new mongoose.Schema({
     enum: ["user", "admin","premium"],
     default: "user",
   },
+  last_connection: {
+    login: Date,
+    logout: Date,
+    session_duration: Number 
+  },
+  documents: [{
+    name:String,
+    reference:String,
+  }
+  ],
 });
 
 mongoose.set('strictQuery', false)

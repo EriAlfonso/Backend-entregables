@@ -1,0 +1,10 @@
+<form action="api/users/:uid/documents" method="post" enctype="multipart/form-data">
+  <label for="fileType">Select File Type:</label>
+  <select name="fileType" id="fileType">
+    <option value="profileImage">Profile Image</option>
+    <option value="productImage">Product Image</option>
+    <option value="document">Document</option>
+  </select>
+  <input type="file" name="file" accept="image/*,.pdf,.doc,.docx,.txt"> 
+  <button type="submit">Upload File</button>
+</form>

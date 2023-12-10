@@ -1,5 +1,3 @@
-import userDTO from "../DTO/users.dto.js";
-import userModel from "../DAO/models/user.model.js";
 import config from "../config/config.js";
 import nodemailer from "nodemailer";
 import { createHash } from "../utils.js";
