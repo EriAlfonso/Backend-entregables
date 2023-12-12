@@ -5,6 +5,7 @@ import { cartPurchase, getCarts } from "../controllers/cart.controller.js";
 import { getLogin, getLogout, getPasswordMail, getPasswordReset, getProfile,newPassword, getRegister,getMailReset } from "../controllers/session.controller.js";
 import { authenticateToken, adminAccess, userAccess, premiumAccess } from "../middlewares/authentication.js";
 import compression from "express-compression";
+import { getUpload } from "../controllers/user.controller.js";
 
 const router = Router();
 
@@ -31,6 +32,9 @@ router.get("/passwordReset",getPasswordReset)
 router.post("/passwordReset",newPassword)
 router.get("/passwordMail",getPasswordMail)
 router.post('/passwordResetMail',getMailReset);
+// uploads and controls
+router.get("/upload-document",authenticateToken,userAccess,getUpload);
+router.get("/admin-panel",authenticateToken, adminAccess,);
 // mocking router
 router.get("/mockingproducts",
     compression({

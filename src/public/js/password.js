@@ -1,4 +1,4 @@
-import { newPassword } from "../../controllers/session.controller";
+
 
 document.querySelector('.password-reset-form').addEventListener('submit', async function(event) {
     event.preventDefault();

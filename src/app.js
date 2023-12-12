@@ -97,7 +97,7 @@ app.use("/api/chat", chatRouter);
 app.use("/api/users", userRouter);
 app.use("/api/session", sessionRouter);
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
-app.use(paymentRouter)
+app.use('/api/payment',paymentRouter)
 app.use(errorHandler)
 
 // port 

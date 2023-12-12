@@ -4,7 +4,7 @@ import multer from "multer";
 const storage = (fileType) => {
     return multer.diskStorage({
       destination: (req, file, cb) => {
-        const uid= req.params
+        const uid= req.params.uid;
         let uploadPath = '';
         if (fileType === 'profileImage') {
           uploadPath = `uploads/${uid}/profile_images/`;

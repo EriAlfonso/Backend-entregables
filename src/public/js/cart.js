@@ -36,21 +36,18 @@ document.getElementById('purchase-btn').addEventListener('click', function () {
         method: 'POST',
     })
     .then(response => {
-        if (response.ok) {
-            return response.json();
-        } 
-        else {
-            console.error("Purchase Error: Can't complete purchase ");
-        }
-    })
-        .then(data => {
-            const confirmationMessage = `Purchase completed successfully!\nTicket Code: ${data.ticket.code}\nTotal Price: ${data.ticket.amount}`;
-            alert(confirmationMessage);
-            window.location.reload();
-        })
-    .catch(error => {
-        console.error("An error occurred:", error);
-    });
+        if (response.ok) { return response.json(); 
+    } else {
+        console.error("Purchase Error: Can't complete purchase ");
+        throw new Error('Purchase Error');
+    }
+})
+.then(data => {
+    window.location.href = data.sessionUrl;
+})
+.catch(error => {
+    console.error("An error occurred:", error);
+});
 });
 
 

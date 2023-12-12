@@ -3,6 +3,7 @@ import userModel from "../DAO/models/user.model.js";
 import ticketsModel from "../DAO/models/ticket.model.js";
 import mongoose from "mongoose";
 import { cartRepository } from "../services/index.js";
+import { stripeSession } from "./payment.controller.js";
 
 
 export default class cartController {
@@ -34,15 +35,12 @@ async cartPurchase(req, res) {
   const cartId = req.params.cid;
   const user = req.session.user.email;
   const userid=  req.session.user
-
   try {
-    const { remainingProducts, ticket } = await cartRepository.cartPurchase(cartId, user);
-    const newCart = await cartRepository.createCartForUser(userid,remainingProducts);
-    res.status(200).json({ message: 'Purchase completed successfully', ticket , newCart});
+    await stripeSession(req, res, cartId, user, userid);
   } catch (error) {
     console.error('Purchase error:', error);
-    req.logger.error('Purchase error:', error)
-    req.logger.fatal('Internal Server Error', { error: err })
+    req.logger.error('Purchase error:', error);
+    req.logger.fatal('Internal Server Error', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 }
