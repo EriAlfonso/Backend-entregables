@@ -85,7 +85,7 @@ export default class sessionController {
             const mail = req.body.email
             const response = await sessionRepository.newPassword(mail, pass)
             if (response.success) {
-                res.status(200).send("Password successfully changed!");
+                res.status(200).json({ success: true })
             } else {
                 req.logger.error("Password Change Failed")
                 res.status(400).send("Failed to change password: " + response.message);

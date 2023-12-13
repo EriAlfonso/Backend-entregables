@@ -110,8 +110,8 @@ export default class sessionService {
     async verifyToken(token) {
         try {
             if (!token) {
-                return res.status(400).send('Invalid token'); 
-            }
+                throw new Error('Invalid token');}
+                
     
             const user = jwt.verify(token, config.PRIVATE_KEY); 
             const userEmail = user.email; 

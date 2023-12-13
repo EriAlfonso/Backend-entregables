@@ -3,7 +3,7 @@ import { stripeCancel,stripeSession,stripeSuccess } from "../../controllers/paym
 
 const router = Router();
 
-router.get("/create-checkout-session",stripeSession)
+router.post("/create-checkout-session",stripeSession)
 router.get("/checkout-success",stripeSuccess)
 router.get("/checkout-cancel",stripeCancel)
 

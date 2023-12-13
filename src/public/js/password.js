@@ -26,6 +26,6 @@ document.querySelector('.password-reset-form').addEventListener('submit', async 
         return;
     }
     alert("Password successfully changed!");
-    this.submit();
+    window.location.href = '/home';
 });
 
