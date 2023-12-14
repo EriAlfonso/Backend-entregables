@@ -1,11 +1,11 @@
 import Stripe from "stripe";
 import config from "../config/config.js";
-import { cartRepository, ticketRepository } from "../services/index.js";
+import { cartRepository, sessionRepository, ticketRepository } from "../services/index.js";
 import nodemailer from 'nodemailer';
 
 const stripe = new Stripe(config.STRIPE_KEY)
 export default class paymentController {
-    async stripeSession(req, res,cartId,user,userid) {
+    async stripeSession(req, res,cartId) {
         try {
             const cart = await cartRepository.getCartByIdAndPopulate(cartId);
             const lineItems = cart.products.map((product) => {
@@ -25,9 +25,8 @@ export default class paymentController {
                 payment_method_types: ['card'],
                 line_items: lineItems,
                 mode: 'payment',
-                success_url: 'http://localhost:8080/api/payment/checkout-success?cart_id={cartId}', 
+                success_url: 'http://localhost:8080/api/payment/checkout-success', 
                 cancel_url: 'http://localhost:8080/api/payment/checkout-cancel', 
-                client_reference_id:cartId,
             });
             res.status(200).json({ sessionUrl: session.url });
         } catch (error) {
@@ -36,17 +35,21 @@ export default class paymentController {
             throw error
         }
     }
-    async stripeSuccess(req, res) {
+    stripeSuccess = async (req, res) => {
         try {
-            const cartId = req.query.cart_id;
-            console.log(cartId)
-            const userId = req.session.user
-            const ticket = await ticketRepository.createTicket(cartId, userId);
-            await this.sendPurchaseConfirmationEmail(ticket, userId);
-            res.render('success');
+            const userEmail = req.session.user.email;
+            const user = await sessionRepository.getUserByEmail(userEmail);
+            console.log(user)
+            const cartId= user.cart 
+            const cart= await cartRepository.getCartByIdAndPopulate(cartId)        
+            const ticket = await ticketRepository.createTicket(cart, user);
+            const remainingProducts  = await cartRepository.cartPurchase(cartId);
+            const newCart = await cartRepository.createCartForUser(user,remainingProducts);
+            await this.sendPurchaseEmail(ticket, user);
+            res.render("paymentSuccess")
         } catch (error) {
-            console.error('Stripe Success error:', error);
-            req.logger.error('Stripe Success error:', error);
+            console.error('Stripe  error:', error);
+            req.logger.error('Stripe error:', error);
             req.logger.fatal('Internal Server Error', error);
             res.status(500).json({ error: 'Internal Server Error' });
         }
@@ -54,7 +57,7 @@ export default class paymentController {
     stripeCancel(req, res) {
        
     }
-    async sendPurchaseConfirmationEmail(ticket, user) {
+    sendPurchaseEmail = async (ticket, user) =>{
         try {
             const transporter = nodemailer.createTransport({
                 service: 'gmail',
@@ -64,12 +67,16 @@ export default class paymentController {
                         pass: config.MAIL_PASS
                     }
             });
-
+            const cartitems=getCartByIdAndPopulate(user.cart)
             const mailOptions = {
                 from: config.MAIL_USER,
                 to: user.email,
                 subject: 'Purchase Confirmation',
-                html: `<p>Thank you for your purchase. Your ticket details: ${ticket}</p>`,
+                html: `<p>Thank you for your purchase ${user.first_name}! Your ticket details:</p>
+                <p>ticket code: ${ticket.code}</p>
+                <p>amount:${ticket.amount}</p>
+                <p>Game On!, Icarus Table Top Gaming</p>`,
+                
             };
             await transporter.sendMail(mailOptions);
         } catch (error) {

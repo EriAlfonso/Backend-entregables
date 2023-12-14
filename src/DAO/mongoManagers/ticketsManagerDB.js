@@ -1,4 +1,5 @@
 import ticketModel from "../models/ticket.model.js";
+import {v4 } from "uuid";
 
 export default class ticketManager {
     async addTicket(data) {
@@ -41,8 +42,7 @@ export default class ticketManager {
                 product.totalPrice = product.quantity * product._id.price;
             });
             const cartTotalPrice = cart.products.reduce((total, product) => total + product.totalPrice, 0);
-            const tickets = await ticketModel.find();
-            const nextCode = tickets.length + 1;
+            const ticketCode = v4();
 
             const ticket = new ticketModel({
                 cart: cart._id,
@@ -50,7 +50,7 @@ export default class ticketManager {
                 products: cart.products,
                 purchaser: user,
                 amount: cartTotalPrice,
-                code: nextCode,
+                code: ticketCode,
             });
 
             await ticket.save();

@@ -4,7 +4,7 @@ const ticketsCollection = "tickets";
 
 const ticketsSchema = new mongoose.Schema({
         code: {
-            type: Number,
+            type: String,
             required: true,
             unique: true
         },

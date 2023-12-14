@@ -17,7 +17,7 @@ export default class cartService{
     return this.cartDAO.getCartByIdAndPopulate(id);
 }
 
-async cartPurchase(cartId, user) {
+async cartPurchase(cartId) {
   try {
     const cart = await this.getCartByIdAndPopulate(cartId);
     if (!cart) {
@@ -51,8 +51,7 @@ async cartPurchase(cartId, user) {
         await product.save();
       }
     }
-    const createdTicket = await ticketRepository.createTicket(cart, user );
-    return { ticket: createdTicket,remainingProducts };
+    return { remainingProducts };
   } catch (error) {
     console.error('Error during cart purchase:', error);
     throw error;

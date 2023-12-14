@@ -70,7 +70,7 @@ export default class sessionController {
         try {
             const email = req.body.email
             const response = sessionRepository.emailValidation(email)
-            res.status(200).send({ success: true, message: await response.message })
+            res.redirect("/home")
         } catch (error) {
             res.status(500).send({ success: false, message: error.message })
         }
