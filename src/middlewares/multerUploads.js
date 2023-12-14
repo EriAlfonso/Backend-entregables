@@ -1,25 +1,30 @@
 import multer from "multer";
 
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const { uid } = req.params;
+    let uploadPath = '';
 
-const storage = (fileType) => {
-    return multer.diskStorage({
-      destination: (req, file, cb) => {
-        const uid= req.params.uid;
-        let uploadPath = '';
-        if (fileType === 'profileImage') {
-          uploadPath = `uploads/${uid}/profile_images/`;
-        } else if (fileType === 'productImage') {
-          uploadPath = `uploads/${uid}/product_images/`;
-        } else if (fileType === 'document') {
-          uploadPath = `uploads/${uid}/documents/`;
-        }
-        cb(null, uploadPath);
-      },
-      filename: (req, file, cb) => {
-        cb(null, file.originalname);
-      }
-    });
-  };
-  const upload = (fileType) => multer({ storage: storage(fileType) });
+    if (file.fieldname === 'profileImage') {
+      uploadPath = `uploads/${uid}/profile_images/`;
+    } else if (file.fieldname === 'productImage') {
+      uploadPath = `uploads/${uid}/product_images/`;
+    } else if (file.fieldname === 'document') {
+      uploadPath = `uploads/${uid}/documents/`;
+    }
+    cb(null, uploadPath);
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+  },
+});
 
-  export default upload
+const upload = multer({ storage: storage });
+
+export const uploader= upload.fields([
+{name:'profileImage',maxCount:1},
+{name:'productImage',maxCount:1},
+{name:'document',maxCount:1}
+])
+
+export default upload

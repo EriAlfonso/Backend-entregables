@@ -136,5 +136,7 @@ export default class sessionService {
             return ({ succes: false, message: error.message })
         }
     }
+
+    
 }
 
