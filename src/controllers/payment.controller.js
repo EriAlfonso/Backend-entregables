@@ -75,7 +75,7 @@ export default class paymentController {
                 html: `<p>Thank you for your purchase ${user.first_name}! Your ticket details:</p>
                 <p>ticket code: ${ticket.code}</p>
                 <p>amount:${ticket.amount}</p>
-                <p>Game On!, Icarus Table Top Gaming</p>`,
+                <p>Game On!, Icarus Table Top Games</p>`,
                 
             };
             await transporter.sendMail(mailOptions);

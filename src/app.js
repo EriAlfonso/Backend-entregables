@@ -21,12 +21,17 @@ import initializePassport from "./config/passport.config.js";
 import config from "./config/config.js";
 import { addLogger } from "./logger/logger.js";
 import { swaggerUi,swaggerSpec } from "./swagger/swaggerconfig.js";
+import Handlebars from "handlebars"
 
 // import product manager
 const productManagerImport = new productManager();
 const chatManagerImport = new chatManager();
 // import express
 const app = express();
+Handlebars.registerHelper('ifEquals', function(arg1, arg2, options) {
+  return (arg1 === arg2) ? options.fn(this) : options.inverse(this);
+});
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser('JWTCookieKey'))

@@ -4,6 +4,8 @@ import userModel from "../DAO/models/user.model.js";
 import { faker } from "@faker-js/faker";
 import EErrors from "../services/errors/enums.js";
 import { ErrorGetProducts } from "../services/errors/info.js";
+import nodemailer from "nodemailer";
+import config from "../config/config.js";
 
 export default class productController {
     constructor() {
@@ -178,6 +180,31 @@ export default class productController {
             const result = await productRepository.deleteProduct(id);
             if (result) {
                 req.logger.info(`Product with id:${id} Deleted`)
+                if ((user.role === 'admin' && product.owner !== user.email) || (user.role === 'premium' && product.owner === user.email)) {
+                    const transporter = nodemailer.createTransport({
+                        service: 'gmail',
+                    port: 587,
+                    auth: {
+                        user: config.MAIL_USER,
+                        pass: config.MAIL_PASS
+                    }
+                    });
+    
+                    const mailOptions = {
+                        from: config.MAIL_USER,
+                        to: user.email,
+                        subject: 'Product Deletion Notification',
+                        text: `Dear ${user.first_name},\n\nYour product with ID ${id} has been deleted by an admin.\n\nRegards,\nIcarus TableTop Games Team`
+                    };
+                    transporter.sendMail(mailOptions, (error, info) => {
+                        if (error) {
+                            req.logger.error('Error sending email', error);
+                        } else {
+                            req.logger.info('Email sent: ' + info.response);
+                        }
+                    });
+                }
+    
                 return res.status(200).json({ message: 'Product deleted successfully' });
             } else {
                 req.logger.error("Product not found")

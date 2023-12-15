@@ -1,10 +1,10 @@
 import chatModel from "../models/messages.model.js";
 
 export default class chatManager {
-  async saveMessage(user, message) {
+  async saveMessage(user, message,textColor) {
     try {
       
-      const newMessage = { user: user, message: message };
+      const newMessage = { user: user, message: message,textColor: textColor };
     await chatModel.create(newMessage);
     return newMessage;
   } catch (error) {

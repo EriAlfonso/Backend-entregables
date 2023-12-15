@@ -7,7 +7,12 @@ const router = Router();
 router.get('/premium/:uid',authenticateToken,adminAccess, (req, res) => {
 
 })
+router.get('/',authenticateToken,adminAccess, (req, res) => {
 
+})
+router.delete('/',authenticateToken,adminAccess, (req, res) => {
+
+})
 router.post('/:uid/documents',authenticateToken,userAccess,uploader,uploadDocument)
 
 export default router;
