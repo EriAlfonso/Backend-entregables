@@ -40,7 +40,7 @@ export default class sessionService {
     }
 
     registerRedirect(res) {
-        res.redirect('/products');
+        res.redirect('/login');
     }
 
     clearSessionCookie(res) {

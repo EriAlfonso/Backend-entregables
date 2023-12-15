@@ -9,7 +9,6 @@ router.get('/premium/:uid',authenticateToken,adminAccess, (req, res) => {
 })
 router.get('/',authenticateToken,adminAccess,getAllUsers)
 router.delete('/',authenticateToken,adminAccess,deleteIdleUsers)
-
 router.post('/:uid/documents',authenticateToken,userAccess,uploader,uploadDocument)
 
 export default router;

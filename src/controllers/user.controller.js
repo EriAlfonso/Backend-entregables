@@ -1,7 +1,8 @@
 import { sessionRepository } from "../services/index.js"
 import upload from "../middlewares/multerUploads.js";
 import multer from "multer";
-
+import config from "../config/config.js";
+import nodemailer from 'nodemailer'
 
 export default class userController {
 async uploadDocument (req,res){
@@ -62,11 +63,9 @@ async uploadDocument (req,res){
     try {
         const twoDaysAgo = new Date();
         twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
-
         const allUsers = await sessionRepository.getUsers();
-
         const usersToDelete = allUsers.filter(user => {
-            return user.last_connection?.login < twoDaysAgo;
+            return user.last_connection< twoDaysAgo;
         });
 
         await Promise.all(usersToDelete.map(async user => {

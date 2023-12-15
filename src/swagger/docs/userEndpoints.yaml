@@ -1,0 +1,110 @@
+openapi: 3.0.0
+info:
+  title: User Management API
+  description: API for managing users and documents
+  version: 1.0.0
+paths:
+  /premium/{uid}:
+    get:
+      summary: Get premium user by ID
+      description: |
+        Get premium user details by their ID.
+      tags:
+        - Users
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          description: ID of the premium user
+          schema:
+            type: string
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: Internal server error
+
+  /:
+    get:
+      summary: Get all users
+      description: |
+        Get details of all users.
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: Internal server error
+
+    delete:
+      summary: Delete idle users
+      description: |
+        Delete idle users from the system.
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful response
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: Internal server error
+
+  /{uid}/documents:
+    post:
+      summary: Upload document for a user
+      description: |
+        Upload a document for a specific user.
+      tags:
+        - Documents
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          description: ID of the user
+          schema:
+            type: string
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Successful response
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: Internal server error
+
+securitySchemes:
+  bearerAuth:
+    type: http
+    scheme: bearer
+    bearerFormat: JWT
