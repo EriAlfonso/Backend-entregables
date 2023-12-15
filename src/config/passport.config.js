@@ -7,6 +7,7 @@ import { createHash,generateToken,isValidPassword } from "../utils.js";
 import jwt from "passport-jwt";
 import config from "./config.js";
 import userDTO from "../DTO/users.dto.js";
+import { sessionRepository } from "../services/index.js";
 
 const LocalStrategy = local.Strategy
 const JwtStrategy = jwt.Strategy
@@ -66,6 +67,7 @@ const initializePassport =() =>{
         const {first_name,last_name,email,age,role} =req.body
         try{
             const user= await userModel.findOne({email:username})
+            const date =new Date()
             if (user){
                 return done (null,false)
             }
@@ -75,7 +77,8 @@ const initializePassport =() =>{
                 email,
                 age,
                 password:createHash(password),
-                role
+                role,
+                last_connection: date
             }
             const result = await userModel.create(newUser)
             return done(null,result)
@@ -97,6 +100,8 @@ const initializePassport =() =>{
                 console.error('Invalid Password')
                 return done (null,false)
             }
+            user.last_connection = new Date()
+            await sessionRepository.updateUser(user._id,user)
             const userData=new userDTO(user)
             const access_token = generateToken({userData})
             userData.access_token = access_token;

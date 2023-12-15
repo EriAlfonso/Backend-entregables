@@ -18,11 +18,7 @@ const userSchema = new mongoose.Schema({
     enum: ["user", "admin","premium"],
     default: "user",
   },
-  last_connection: {
-    login: Date,
-    logout: Date,
-    session_duration: Number 
-  },
+  last_connection:Date,
   documents: [{
     name:String,
     reference:String,
