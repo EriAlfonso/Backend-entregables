@@ -33,7 +33,6 @@ router.post("/",authenticateToken,userAccess, async (req, res) => {
   }
 });
 
-// check user email, compare it to owner, and show an alert if its its own product
 router.post("/:cid/product/:pid",authenticateToken,userAccess, async (req, res) => {
   const { cid, pid } = req.params;
   const quantity = req.body.quantity || 1;

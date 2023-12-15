@@ -42,9 +42,85 @@ async uploadDocument (req,res){
       const userId = req.user.userData._id;
       res.render("documents", {uid: userId})
   }
+
+  async getAllUsers(req, res){
+    try {
+      const allUsers = await sessionRepository.getUsers();
+      const usersInfo = allUsers.map(user => ({
+          role: user.role,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          email: user.email
+      }));
+      res.status(200).json(usersInfo);
+  } catch (error) {
+      console.error('Error retrieving users:', error);
+      res.status(500).json({ error: 'Internal server error' });
+  }}
+
+  async deleteIdleUsers(req, res) {
+    try {
+        const twoDaysAgo = new Date();
+        twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+
+        const allUsers = await sessionRepository.getUsers();
+
+        const usersToDelete = allUsers.filter(user => {
+            return user.last_connection?.login < twoDaysAgo;
+        });
+
+        await Promise.all(usersToDelete.map(async user => {
+            const transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: config.MAIL_USER,
+                    pass: config.MAIL_PASS
+                }
+            });
+
+            const mailOptions = {
+                from: config.MAIL_USER,
+                to: user.email,
+                subject: 'Account Deletion Notification',
+                text: `Dear ${user.first_name},\n\nYour account has been deleted by an admin for inactivity. If you want to use our services in the future, you must create a new account.\n\nWith regards,\nIcarus TableTop Games Team`
+            };
+
+            try {
+                const info = await transporter.sendMail(mailOptions);
+                console.log('Email sent: ' + info.response);
+            } catch (error) {
+                console.error('Error sending email', error);
+            }
+
+            await userModel.deleteOne({ _id: user._id });
+        }));
+
+        res.status(200).json({ message: 'Users deleted and emails sent successfully' });
+    } catch (error) {
+        console.error('Error deleting users:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
+  async adminPanelView(req, res){
+    try {
+        const allUsers = await sessionRepository.getUsers();
+        console.log(allUsers)
+        const usersInfo = allUsers.map(user => ({
+            role: user.role,
+            first_name: user.first_name,
+            last_name: user.last_name,
+            email: user.email
+        }));
+        res.render('adminPanel', { users: usersInfo });
+    } catch (error) {
+        console.error('Error retrieving users:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
   }
   const userControllerimp = new userController();
-  const { uploadDocument,getUpload } = userControllerimp;
+  const { uploadDocument,getUpload,getAllUsers,adminPanelView,deleteIdleUsers} = userControllerimp;
 export {
-uploadDocument,getUpload
+uploadDocument,getUpload,getAllUsers,adminPanelView,deleteIdleUsers
 }

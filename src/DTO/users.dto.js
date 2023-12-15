@@ -6,5 +6,6 @@ export default class userDTO {
       this.age = user.age;
       this.role = user.role;
       this._id = user._id;
+      this.last_connection= user.last_connection
     }
   }

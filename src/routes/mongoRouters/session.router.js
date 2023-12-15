@@ -5,9 +5,6 @@ import { getPasswordReset} from "../../controllers/session.controller.js";
 import { sessionRepository } from "../../services/index.js";
 
 
-
-
-
 const router = Router();
 
 router.post('/login', passport.authenticate('login', '/login'), async (req, res) => {
