@@ -13,5 +13,6 @@ export default {
     NODE_ENV: process.env.NODE_ENV,
     MAIL_USER: process.env.MAIL_USER,
     MAIL_PASS:process.env.MAIL_PASS,
-    STRIPE_KEY:process.env.STRIPE_KEY
+    STRIPE_KEY:process.env.STRIPE_KEY,
+    PORT:process.env.PORT
 }

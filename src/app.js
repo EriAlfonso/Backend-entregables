@@ -106,7 +106,7 @@ app.use('/api/payment',paymentRouter)
 app.use(errorHandler)
 
 // port 
-const httpServer = app.listen(8080, () => console.log("Server is Running.."));
+const httpServer = app.listen(config.PORT, () => console.log("Server is Running.."));
 
 // server io
 const io = new Server(httpServer);
