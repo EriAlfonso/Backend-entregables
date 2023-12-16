@@ -39,7 +39,6 @@ export default class paymentController {
         try {
             const userEmail = req.session.user.email;
             const user = await sessionRepository.getUserByEmail(userEmail);
-            console.log(user)
             const cartId= user.cart 
             const cart= await cartRepository.getCartByIdAndPopulate(cartId)        
             const ticket = await ticketRepository.createTicket(cart, user);
@@ -67,7 +66,6 @@ export default class paymentController {
                         pass: config.MAIL_PASS
                     }
             });
-            const cartitems=getCartByIdAndPopulate(user.cart)
             const mailOptions = {
                 from: config.MAIL_USER,
                 to: user.email,

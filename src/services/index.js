@@ -5,7 +5,7 @@ import sessionService from "./session.service.js";
 import ticketService from "./ticket.service.js";
 
 export const productRepository = new productService(
-    new  Products(),
+    new Products(),
   );
 export const sessionRepository= new sessionService(
   new User(),
